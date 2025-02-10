@@ -1,0 +1,13 @@
+node_modules/
+public/
+.config/
+.vscode/
+/dist/
+/example/
+/standalone/
+/storybook/
+
+dsfr-sb/*storybook.log
+dsfr-sb/storybook-static/
+
+.DS_Store

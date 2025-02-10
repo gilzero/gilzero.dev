@@ -1,0 +1,41 @@
+bootstrap:
+  remote: https://getbootstrap.com/
+  license:
+    name: MIT
+    url: https://github.com/twbs/bootstrap/blob/main/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/bootstrap/js/bootstrap.min.js: { minified: true }
+  css:
+    theme:
+      /libraries/bootstrap/css/bootstrap.min.css: {}
+  dependencies:
+    - core/jquery
+
+bootstrap-composer:
+  remote: https://getbootstrap.com/
+  license:
+    name: MIT
+    url: https://github.com/twbs/bootstrap/blob/main/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/bootstrap/dist/js/bootstrap.js: {}
+  css:
+    theme:
+      /libraries/bootstrap/dist/css/bootstrap.css: {}
+  dependencies:
+    - core/jquery
+
+bootstrap-dev:
+  remote: https://getbootstrap.com/
+  license:
+    name: MIT
+    url: https://github.com/twbs/bootstrap/blob/main/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/bootstrap/js/bootstrap.js: {}
+  css:
+    theme:
+      /libraries/bootstrap/css/bootstrap.css: {}
+  dependencies:
+    - core/jquery

@@ -1,0 +1,10 @@
+name: Bootstrap Library
+description: Register Boostrap as a library by installing files in /libraries/bootstrap.
+type: module
+package: Bootstrap
+core_version_requirement: ^10.3 || ^11
+configure: bootstrap_library.admin
+libraries:
+  - bootstrap_library/bootstrap
+  - bootstrap_library/bootstrap-dev
+  - bootstrap_library/bootstrap-cdn
