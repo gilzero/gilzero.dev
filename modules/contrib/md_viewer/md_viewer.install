@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the md_viewer module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function md_viewer_uninstall() {
+  \Drupal::configFactory()->getEditable('field.formatter.settings.mdocviewer_field')->delete();
+}

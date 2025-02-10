@@ -1,0 +1,27 @@
+{
+  "name": "drupal/ai_ckeditor_extras",
+  "description": "Provides extra features to the AI CKEditor.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Carlos Escuriola (escuriola)",
+      "homepage": "https://www.drupal.org/u/escuriola",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Tomas Statkevičius (statkevicius)",
+      "homepage": "https://www.drupal.org/u/statkevicius",
+      "role": "Maintainer"
+    }
+  ],
+  "homepage": "https://www.drupal.org/project/ai_ckeditor_extras",
+  "require": {
+    "drupal/core": "^10 || ^11",
+    "drupal/ai": "^1.0"
+  },
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/ai_ckeditor_extras",
+    "source": "https://git.drupalcode.org/project/ai_ckeditor_extras"
+  }
+}

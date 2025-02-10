@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Postlight parser module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function postlight_parser_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.postlight_parser':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Link content parser module extracts the bits that humans care about from any URL you give it.<br/>That includes article content, titles, authors, published dates, excerpts, lead images, and more.') . '</p>';
+      $output .= '<p>' . t('It will be useful when you want to copy content from url.') . '</p>';
+      $output .= '<h4>' . t('How to work') . '</h4>';
+      $output .= '<ul><li>' . t('Add link field') . '</li>';
+      $output .= '<li>' . t('Select widget Url content parser') . '</li>';
+      $output .= '<li>' . t('Mapping yours fields') . '</li></ul>';
+      $output .= '<ul><li>' . t('Add button <img src="/modules/contrib/postlight_parser/icons/url-parser.svg" width="25" title="Url content parser"/>in <a href="/admin/config/content/formats">ckeditor5 configuration</a>. Tab [Source editing] add tag iframe (Youtube, Dailymotion), blockquote (titok),...') . '</li>';
+      $output .= '<li>' . t('Select option Url content parser') . '</li></ul>';
+      $output .= '<h5>' . t('For developper') . '</h5>';
+      $output .= '<p>' . t('You can use <u>/parser/readability?url=LINK_TO_GET_CONTENT</u>. It will return json {title,content,excerpt,lead_image_url,author}') . '</p>';
+      $output .= '<p>' . t('For crawling content you can use service <b>postlight_parser.url_parser</b') . '</p>';
+      $output .= '<h6>' . t('Example:') . '</h6>';
+      $output .= '<pre>
+    $argument = [
+      "url" => "https://lemonde.fr/article_xxx.html",
+      "parser" => "readability", // graby, postlight, mercury, embera
+      "save_image" => TRUE,
+    ];
+    $output = \Drupal::service("postlight_parser.url_parser")->parser($argument);
+    if (!empty($article = $output["data"])) {
+      $new_article = Node::create(["type" => "article"]);
+      $new_article->set("title", $article["title"]);
+      $new_article->set("body", $article["content"]);
+      $new_article->enforceIsNew();
+      $new_article->save();
+    }</pre>';
+      break;
+
+    default:
+      return FALSE;
+  }
+  return $output;
+}

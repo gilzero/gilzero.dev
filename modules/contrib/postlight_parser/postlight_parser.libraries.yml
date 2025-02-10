@@ -1,0 +1,18 @@
+postlight_parser:
+  js:
+    js/url-parser.js: {}
+  dependencies:
+    - core/drupal
+
+ckeditor.postlight_parser:
+  js:
+    js/build/postlightParser.js: { preprocess: false, minified: true }
+  dependencies:
+    - ckeditor5/ckeditor5
+
+# Loaded in the text format configuration form to provide styling for the icon
+# used in toolbar config.
+admin.postlight_parser:
+  css:
+    theme:
+      css/postlight-parser.admin.css: { }

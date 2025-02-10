@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+use Drupal\refreshless_ajax\Theme\PreprocessRegion;
+
+/**
+ * Implements hook_preprocess_HOOK() for region templates.
+ *
+ * @see \Drupal\refreshless_ajax\Theme\PreprocessRegion
+ */
+function refreshless_ajax_preprocess_region(array &$variables): void {
+
+  \Drupal::classResolver(PreprocessRegion::class)->preprocess($variables);
+
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * This moves our js_settings_alter implementation to the end of the list.
+ *
+ * Note that Hux does not support this alter and will throw an exception if we
+ * attempt to add it as a hook class.
+ *
+ * @todo This doesn't seem to work when the hook we're changing the order of is
+ *   implemented as a Hux hook class; get this working or remove it.
+ */
+function refreshless_ajax_module_implements_alter(
+  array &$implementations, string $hook,
+): void {
+
+  if (
+    $hook !== 'js_settings_alter' ||
+    // Prevents fatal errors when our hook implementation isn't found.
+    !isset($implementations['refreshless'])
+  ) {
+    return;
+  }
+
+  $group = $implementations['refreshless'];
+
+  unset($implementations['refreshless']);
+
+  $implementations['refreshless'] = $group;
+
+}

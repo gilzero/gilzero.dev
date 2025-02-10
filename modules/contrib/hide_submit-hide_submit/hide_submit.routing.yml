@@ -1,0 +1,7 @@
+hide_submit.settings:
+  path: '/admin/config/content/hide-submit'
+  defaults:
+    _controller: '\Drupal\hide_submit\Controller\HideSubmitController::settings'
+    _title: 'Hide Submit Settings'
+  requirements:
+    _permission: 'administer site configuration'

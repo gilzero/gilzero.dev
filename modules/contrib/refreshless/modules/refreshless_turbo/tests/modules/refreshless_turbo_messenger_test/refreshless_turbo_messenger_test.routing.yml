@@ -1,0 +1,21 @@
+refreshless_turbo_messenger_test.one:
+  path: '/refreshless_turbo_messenger_test/one'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_messenger_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo messenger test one'
+    linkToRoute: 'refreshless_turbo_messenger_test.two'
+    message: 'RefreshLess test message for route one.'
+    linkContent: 'Reload to route two'
+
+refreshless_turbo_messenger_test.two:
+  path: '/refreshless_turbo_messenger_test/two'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_messenger_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo messenger test two'
+    linkToRoute: 'refreshless_turbo_messenger_test.one'
+    message: 'RefreshLess test message for route two.'
+    linkContent: 'Reload to route one'

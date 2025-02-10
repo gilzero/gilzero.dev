@@ -1,0 +1,24 @@
+{
+    "name": "drupal/bootstrap_ui",
+    "description": "Integration of the Bootstrap CSS framework along with a user interface for configuring and customizing components, variables, and plugins.",
+    "type": "drupal-module",
+    "keywords": ["Drupal", "Bootstrap", "Bootstrap UI", "CSS Bootstrap"],
+    "homepage": "https://www.drupal.org/project/bootstrap_ui",
+    "support": {
+        "issues": "https://drupal.org/project/issues/bootstrap_ui",
+        "source": "https://git.drupalcode.org/project/bootstrap_ui"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/core": "^8.8 || ^9 || ^10 || ^11"
+    },
+    "authors": [
+        {
+            "name": "Mahyar Sabeti",
+            "email": "mahyar.sbt7@gmail.com",
+            "homepage": "https://www.drupal.org/u/mahyarsbt",
+            "role": "Maintainer"
+        }
+    ],
+    "license": "GPL-2.0+"
+}

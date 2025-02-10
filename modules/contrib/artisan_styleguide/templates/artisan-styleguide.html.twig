@@ -1,0 +1,15 @@
+<div class="container"><h1>{{ 'Artisan Styleguide'|t }}</h1></div>
+{% if intro_notes is not empty %}
+  <div class="container my-5">
+    <h2>{{ 'Notes'|t }}</h2>
+    <ul class="m-0">
+    {% for intro_note in intro_notes %}
+      <li>{{ intro_note }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+<div class="container">
+  <h2>{{ 'Components'|t }}</h2>
+</div>
+{{ components }}

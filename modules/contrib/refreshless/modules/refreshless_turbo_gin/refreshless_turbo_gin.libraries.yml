@@ -1,0 +1,16 @@
+gin_accent:
+  css:
+    theme:
+      css/gin_accent.css: {}
+  js:
+    js/gin_accent.js: { attributes: { defer: true } }
+  header: true
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+gin_navigation:
+  css:
+    theme:
+      css/gin_navigation.css: {}

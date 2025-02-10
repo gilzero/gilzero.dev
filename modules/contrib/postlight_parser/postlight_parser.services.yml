@@ -1,0 +1,4 @@
+services:
+  postlight_parser.url_parser:
+    class: Drupal\postlight_parser\UrlParserService
+    arguments: ['@file_system', '@file_url_generator', '@messenger', '@http_client', '@current_user', '@entity_type.manager']

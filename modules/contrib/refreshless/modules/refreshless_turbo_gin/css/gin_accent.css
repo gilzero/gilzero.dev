@@ -1,0 +1,9 @@
+:root[data-gin-accent] {
+
+  --refreshless-progress-bar-filled-colour: rgb(var(--gin-color-primary-rgb));
+
+  --refreshless-progress-bar-empty-colour: rgb(var(
+    --gin-color-primary-light-rgb
+  ));
+
+}

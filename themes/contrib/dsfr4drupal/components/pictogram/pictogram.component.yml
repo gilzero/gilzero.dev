@@ -1,0 +1,15 @@
+name: Icon
+description: Display of DSFR pictograms.
+status: stable
+group: DSFR
+props:
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+    pictogram:
+      type: string
+      title: Pictogram
+      description: 'The pictogram filepath.'
+  required:
+    - pictogram

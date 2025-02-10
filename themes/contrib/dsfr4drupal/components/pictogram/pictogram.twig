@@ -1,0 +1,19 @@
+{% set attributes = attributes|default(create_attribute()) %}
+
+{% if not attributes.hasAttribute('width') %}
+  {% set attributes = attributes.setAttribute('width', '80px') %}
+{% endif %}
+
+{% if not attributes.hasAttribute('height') %}
+  {% set attributes = attributes.setAttribute('height', '80px') %}
+{% endif %}
+
+{% if not attributes.hasAttribute('viewBox') %}
+  {% set attributes = attributes.setAttribute('viewBox', '0 0 80 80') %}
+{% endif %}
+
+<svg{{ attributes.setAttribute('aria-hidden', 'true').addClass('fr-artwork') }}>
+  <use class="fr-artwork-decorative" href="{{ pictogram }}#artwork-decorative"></use>
+  <use class="fr-artwork-minor" href="{{ pictogram }}#artwork-minor"></use>
+  <use class="fr-artwork-major" href="{{ pictogram }}#artwork-major"></use>
+</svg>

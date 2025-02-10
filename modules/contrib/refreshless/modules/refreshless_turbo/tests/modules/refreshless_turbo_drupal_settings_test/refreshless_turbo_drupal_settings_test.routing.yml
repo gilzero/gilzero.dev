@@ -1,0 +1,19 @@
+refreshless_turbo_drupal_settings_test.no_xss:
+  path: '/refreshless_turbo_drupal_settings_test/no_xss'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_drupal_settings_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo drupalSettings test no XSS'
+    linkToRoute: 'refreshless_turbo_drupal_settings_test.yes_xss'
+    xssAttempt: false
+
+refreshless_turbo_drupal_settings_test.yes_xss:
+  path: '/refreshless_turbo_drupal_settings_test/yes_xss'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_drupal_settings_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo drupalSettings test XSS attempt'
+    linkToRoute: 'refreshless_turbo_drupal_settings_test.no_xss'
+    xssAttempt: true

@@ -1,0 +1,12 @@
+{
+  "name": "drupal-refreshless",
+  "version": "2.0.0",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://www.drupal.org/project/refreshless",
+  "workspaces": [
+    "modules/*"
+  ],
+  "dependencies": {
+    "drupal-refreshless-turbo": "workspace:*"
+  }
+}

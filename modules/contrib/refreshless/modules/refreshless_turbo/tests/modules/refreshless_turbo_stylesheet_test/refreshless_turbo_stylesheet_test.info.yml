@@ -1,0 +1,14 @@
+name: RefreshLess - Turbo - Stylesheet test module
+type: module
+description: Test module for RefreshLess Turbo stylesheet handling.
+package: Testing
+core_version_requirement: ^10.3 || ^11.0
+php: 8.1
+
+dependencies:
+  - refreshless:refreshless_turbo
+
+# Information added by Drupal.org packaging script on 2025-01-28
+version: '2.0.0-alpha7'
+project: 'refreshless'
+datestamp: 1738108414

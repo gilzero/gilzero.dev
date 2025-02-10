@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for Git Info.
+ */
+
+use Drupal\user\Entity\Role;
+
+/**
+ * Set user permissions.
+ */
+function git_info_update_8001() {
+  foreach (['anonymous', 'authenticated'] as $item) {
+    if ($role = Role::load($item)) {
+      $role->grantPermission('view git info');
+      $role->save();
+    }
+  }
+}

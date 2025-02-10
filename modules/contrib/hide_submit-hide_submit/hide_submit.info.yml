@@ -1,0 +1,15 @@
+name: 'Hide Submit Button'
+type: module
+description: 'Hides the submit button after a form is submitted to avoid duplicate posting'
+core_version_requirement: ^10 || ^11
+package: Custom
+configure: hide_submit.settings
+dependencies:
+  - drupal:system
+tags:
+  - content
+
+# Information added by Drupal.org packaging script on 2024-08-22
+version: '1.0.0-alpha3'
+project: 'hide_submit'
+datestamp: 1724323073

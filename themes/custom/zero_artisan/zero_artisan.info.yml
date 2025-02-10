@@ -1,0 +1,25 @@
+name: 'zero artisan'
+type: theme
+'base theme': artisan
+description: ''
+'alt text': 'zero_artisan Artisan based theme.'
+core_version_requirement: ^11
+dependencies:
+  - 'drupal:serialization'
+regions:
+  header_top: 'Header Top'
+  branding: Branding
+  primary_menu: 'Primary menu'
+  secondary_menu: 'Secondary menu'
+  header: Header
+  content: Content
+  footer_top: 'Footer Top'
+  footer_bottom: 'Footer Bottom'
+libraries:
+  - zero_artisan/style
+ckeditor5-stylesheets:
+  - build/css/style.css
+version: 1.0.0
+project: artisan
+datestamp: 1738686397
+generator: 'artisan_starterkit:1.3.9'

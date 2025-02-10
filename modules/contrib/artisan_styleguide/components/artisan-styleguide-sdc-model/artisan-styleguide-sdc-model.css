@@ -1,0 +1,32 @@
+/*
+Note customizations of main theme uses CSS variables like "--theme-palette-primary". Make sure you take that into account in order to preserve site design harmony.
+Theme customization usage format "--example-color: var(--theme-example-color, var(--FALLBACK-CSS-VAR, FALLBACK-CSS-VALUE));".
+Theme customization usage defined format "color: var(--example-color);".
+Ensure correct prop (predefined schema simple value) or slot (renderable "block") definitions for components.
+*/
+.artisan-styleguide-sdc-model {
+  /* Without cutomizable color but using existing customization: */
+  --artisan-styleguide-sdc-model-color: var(--theme-palette-primary, var(--bs-primary, black));
+  /* With cutomizable color: */
+  /*--artisan-styleguide-sdc-model-color: var(--theme-artisan-styleguide-sdc-model-color, var(--theme-body-color, black));*/
+
+  & .artisan-styleguide-sdc-model__inner {
+    /* Customization usage */
+    color: var(--artisan-styleguide-sdc-model-color);
+  }
+  & .artisan-styleguide-sdc-model__prop-string {}
+  & .artisan-styleguide-sdc-model__prop-uri {}
+  & .artisan-styleguide-sdc-model__prop-regex {}
+  & .artisan-styleguide-sdc-model__prop-boolean {}
+  & .artisan-styleguide-sdc-model__prop-integer {}
+  & .artisan-styleguide-sdc-model__prop-number {}
+  & .artisan-styleguide-sdc-model__prop-object {}
+  & .artisan-styleguide-sdc-model__prop-array-of-strings {}
+  & .artisan-styleguide-sdc-model__prop-array-of-objects {}
+  & .artisan-styleguide-sdc-model__prop-enum-of-strings {}
+  & .artisan-styleguide-sdc-model__prop-enum-of-numbers {}
+  & .artisan-styleguide-sdc-model__prop-font-icon {}
+  & .artisan-styleguide-sdc-model__slot-renderable-string-twig {}
+  & .artisan-styleguide-sdc-model__slot-string-html {}
+  & .artisan-styleguide-sdc-model__slot-renderable-array {}
+}

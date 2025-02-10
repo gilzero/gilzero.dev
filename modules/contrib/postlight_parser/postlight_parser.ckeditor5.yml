@@ -1,0 +1,19 @@
+# @see core/modules/ckeditor5/ckeditor5.ckeditor5.yml
+# @see https://www.drupal.org/project/ckeditor5_dev
+postlight_parser_plugin:
+  # Configuration that will be sent to CKEditor 5 JavaScript plugins.
+  ckeditor5:
+    plugins:
+      - postlightParser.PostlightParser
+
+  # Configuration that will be used directly by Drupal.
+  drupal:
+    label: 'Url get content'
+    library: postlight_parser/ckeditor.postlight_parser
+    admin_library: postlight_parser/admin.postlight_parser
+    toolbar_items:
+      urlParser:
+        label: 'Url get content'
+    # The plugin does not provide elements.
+    elements: false
+    class: Drupal\postlight_parser\Plugin\CKEditor5Plugin\UrlParserIcon

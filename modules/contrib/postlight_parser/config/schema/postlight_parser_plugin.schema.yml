@@ -1,0 +1,13 @@
+ckeditor5.plugin.postlight_parser_plugin:
+  type: mapping
+  label: List
+  mapping:
+    parser:
+      type: string
+      label: Parser library
+    endpoint:
+      type: string
+      label: Parser url endpoint
+    save_image:
+      type: boolean
+      label: Save image inline

@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Embedded Microsoft Document Viewer Formatter.
+ *
+ * Available variables:
+ * - url: The publicly accessible url at which the embedded document may be reached.
+ * - file_name: The original file name of the embedded document.
+ * - settings: Field formatter settings. [ includes width, height ]
+ * - embed_link: The microsoft embed link.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set source = embed_link ~ '?src=' ~ url %}
+{% set width  = settings.width ? settings.width ~ 'px':'100%' %}
+{% set height  = settings.height ? settings.height ~ 'px':'600px' %}
+
+<iframe src="{{ source }}" frameborder="no" style="width:{{ width }};height:{{ height }}"></iframe>

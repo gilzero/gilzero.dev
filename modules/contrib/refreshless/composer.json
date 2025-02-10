@@ -1,0 +1,45 @@
+{
+  "name": "drupal/refreshless",
+  "description": "RefreshLess layers JavaScript-based navigation on top of Drupal's existing server-rendered HTML to provide the kind of smooth, fast, and responsive experience users expect.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "keywords": ["performance", "scalability"],
+  "homepage": "https://www.drupal.org/project/refreshless",
+  "authors": [
+    {
+      "name": "Matei Stanca",
+      "homepage":"https://www.drupal.org/u/ambientimpact",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Wim Leers",
+      "homepage":"https://www.drupal.org/u/wim-leers",
+      "role": "Maintainer"
+    },
+    {
+      "name": "See other contributors",
+      "homepage": "https://www.drupal.org/node/2693129/committers"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/refreshless",
+    "irc": "irc://irc.freenode.org/drupal",
+    "source": "https://git.drupalcode.org/project/refreshless"
+  },
+  "require": {
+    "php": "^8.1",
+    "composer/semver": "^3.0",
+    "cweagans/composer-patches": "^1.7.0",
+    "drupal/core": "^10.3 || ^11.0",
+    "drupal/hux": "^1.4"
+  },
+  "extra": {
+    "patches": {
+      "drupal/core": {
+        "JS aggregation should account for \"async\" and \"defer\" attributes [#1587536]: https://www.drupal.org/project/drupal/issues/1587536": "https://git.drupalcode.org/project/refreshless/-/raw/9bd0325f415e95bfaa7adc29daaf26cc32bed673/modules/refreshless_turbo/patches/drupal/core/1587536-js-aggregation-async-defer-attributes.patch",
+        "Allow setting aggregation groups for js files in library definitions [#3232810]: https://www.drupal.org/project/drupal/issues/3232810": "https://git.drupalcode.org/project/refreshless/-/raw/a9abd3f0581150115ce17dcf8d80891db6dbb84d/patches/drupal/core/3232810-aggregation-groups-for-js.patch",
+        "New navigation does not displace if detached and attached again [#3487905]: https://www.drupal.org/project/drupal/issues/3487905": "https://git.drupalcode.org/project/refreshless/-/raw/a9abd3f0581150115ce17dcf8d80891db6dbb84d/patches/drupal/core/3487905-navigation-displace-detach-attach.patch"
+      }
+    }
+  }
+}

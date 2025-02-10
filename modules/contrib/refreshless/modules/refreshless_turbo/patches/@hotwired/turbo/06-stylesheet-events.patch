@@ -1,0 +1,58 @@
+diff --git a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+index bf726e4..fc485d4 100644
+--- a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
++++ b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+@@ -4647,15 +4647,29 @@ Copyright © 2024 37signals LLC
+     }
+ 
+     async copyNewHeadStylesheetElements() {
++
+       const loadingElements = [];
+ 
+-      for (const element of this.newHeadStylesheetElements) {
++      const beforeEvent = dispatch('turbo:before-stylesheets-merge', { detail: {
++        newStylesheets: this.newHeadStylesheetElements,
++        oldStylesheets: this.oldHeadStylesheetElements,
++      } });
++
++      for (const element of beforeEvent.detail.newStylesheets) {
+         loadingElements.push(waitForLoad(element));
+ 
+         document.head.appendChild(element);
+       }
+ 
++      dispatch('turbo:stylesheets-merged', { detail: {
++        loadingElements,
++        mergedStylesheets: beforeEvent.detail.newStylesheets,
++      } });
++
+       await Promise.all(loadingElements);
++
++      dispatch('turbo:stylesheets-loaded', { detail: { loadingElements } });
++
+     }
+ 
+     copyNewHeadScriptElements() {
+@@ -4665,9 +4679,21 @@ Copyright © 2024 37signals LLC
+     }
+ 
+     removeUnusedDynamicStylesheetElements() {
+-      for (const element of this.unusedDynamicStylesheetElements) {
++
++      const elements = this.unusedDynamicStylesheetElements;
++
++      const event = dispatch('turbo:before-stylesheets-remove', { detail: {
++        stylesheets: elements,
++      } });
++
++      for (const element of event.detail.stylesheets) {
+         document.head.removeChild(element);
+       }
++
++      dispatch('turbo:stylesheets-removed', {
++        detail: { stylesheets: event.detail.stylesheets },
++      });
++
+     }
+ 
+     async mergeProvisionalElements() {

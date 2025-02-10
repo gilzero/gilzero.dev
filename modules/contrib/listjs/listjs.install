@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Containing installation and update hooks for list.js.
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_requirements().
+ */
+function listjs_requirements($phase) {
+  $requirements = [];
+  // If we are not in runtime phase, there is nothing to do. So bail out early.
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  /** @var \Drupal\Core\Asset\LibrariesDirectoryFileFinder $library_file_finder */
+  $library_file_finder = \Drupal::service('library.libraries_directory_file_finder');
+  /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+  $library_definition = \Drupal::service('library.discovery')->getLibraryByName('listjs', 'listjs');
+  $help_text = t('
+  <strong>Composer installation (recommended)</strong></br>
+  <ol>
+    <li>Enable usage of third-party libraries using composer, see @here for an explanation.</li>
+    <li>Require the list.js library using "composer require bower-asset/listjs"</li>
+  </ol>
+  <strong>Manual installation</strong>
+  <ol>
+    <li>Download the @pluginDownloadLink</li>
+    <li>Extract the archive and place the listjs directory in the "libraries" directory on your server.</li>
+  </ol>',
+  [
+    '@pluginDownloadLink' => Link::fromTextAndUrl(t('List.js plugin'), Url::fromUri($library_definition['remote']))->toString(),
+    '@here' => Link::fromTextAndUrl(t('here'), Url::fromUri('https://www.drupal.org/docs/develop/using-composer/manage-dependencies#third-party-libraries'))->toString(),
+  ]);
+
+  // Library not found, show a warning:
+  if (!$library_file_finder->find('listjs')) {
+    $requirements['listjs_plugin'] = [
+      'title' => t('List.js plugin'),
+      'severity' => REQUIREMENT_WARNING,
+      'value' => t('Missing local library'),
+      'description' => t('List.js library not found in the "libraries" directory.<br>@helpText', [
+        '@helpText' => $help_text,
+      ]),
+    ];
+  }
+  return $requirements;
+}

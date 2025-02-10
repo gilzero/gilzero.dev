@@ -1,0 +1,16 @@
+status: true
+dependencies:
+  theme:
+    - zero_artisan
+id: zero_artisan_primary_admin_actions
+theme: zero_artisan
+region: content
+weight: -4
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,13 @@
+name: 'Artisan Styleguide'
+type: module
+description: 'Artisan Styleguide'
+package: Artisan
+core_version_requirement: ^10 || ^11
+configure: artisan_styleguide.preview
+dependencies:
+  - drupal:serialization
+
+# Information added by Drupal.org packaging script on 2025-01-13
+version: '1.0.0'
+project: 'artisan_styleguide'
+datestamp: 1736759556

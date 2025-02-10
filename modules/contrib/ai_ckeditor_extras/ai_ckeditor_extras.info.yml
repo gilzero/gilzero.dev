@@ -1,0 +1,14 @@
+name: AI CKEditor Extras
+description: This module provides CKEditor new AI features.
+package: AI
+type: module
+core_version_requirement: ^10.3 || ^11
+
+dependencies:
+  - drupal:ai
+
+
+# Information added by Drupal.org packaging script on 2024-11-26
+version: '1.0.0-alpha1'
+project: 'ai_ckeditor_extras'
+datestamp: 1732640977

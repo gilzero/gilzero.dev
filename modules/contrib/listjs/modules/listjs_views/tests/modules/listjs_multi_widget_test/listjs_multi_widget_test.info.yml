@@ -1,0 +1,14 @@
+name: List.js multiple widget test
+type: module
+description: Tests multiple listjs widgets in a single page
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - listjs:listjs_views
+  - drupal:node
+  - drupal:text
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2024-08-22
+version: '2.0.1'
+project: 'listjs'
+datestamp: 1724322091

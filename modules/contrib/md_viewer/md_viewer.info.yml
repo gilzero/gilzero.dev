@@ -1,0 +1,13 @@
+name: Microsoft Document Viewer
+type: module
+description: Field formatter with microsoft document viewer embed
+package: Field Formatter
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - drupal:field
+  - drupal:file
+
+# Information added by Drupal.org packaging script on 2024-08-03
+version: '2.0.1'
+project: 'md_viewer'
+datestamp: 1722669249

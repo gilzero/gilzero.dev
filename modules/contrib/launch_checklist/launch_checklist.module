@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Uses best practices to check for pre-launch best practices.
+ */
+
+require_once __DIR__ . '/inc/routes.inc';
+require_once __DIR__ . '/inc/section_01_general.inc';
+require_once __DIR__ . '/inc/section_02_browser_checks.inc';
+require_once __DIR__ . '/inc/section_03_forms.inc';
+require_once __DIR__ . '/inc/section_04_seo.inc';
+require_once __DIR__ . '/inc/section_05_permissions.inc';
+require_once __DIR__ . '/inc/section_06_content.inc';
+require_once __DIR__ . '/inc/section_07_gdpr_privacy.inc';
+require_once __DIR__ . '/inc/section_08_security.inc';
+require_once __DIR__ . '/inc/section_09_database.inc';
+require_once __DIR__ . '/inc/section_10_theme.inc';
+require_once __DIR__ . '/inc/section_11_accessibility.inc';
+require_once __DIR__ . '/inc/section_12_drupal_modules.inc';
+require_once __DIR__ . '/inc/section_13_other.inc';
+require_once __DIR__ . '/inc/section_14_printability.inc';
+
+/**
+ * Implements hook_checklistapi_checklist_info().
+ *
+ * @see _launch_checklist_preprocess_checklist_items()
+ */
+function launch_checklist_checklistapi_checklist_info() {
+  $definitions = [];
+  $definitions['launch_checklist'] = [
+    '#title' => t('Launch checklist'),
+    '#description' => t('Keep track of your pre-launch tasks.'),
+    '#path' => '/admin/config/development/launch-checklist',
+    '#callback' => 'launch_checklist_checklistapi_checklist_items',
+    '#help' => t("<p>Check off each task as you complete it. Don't forget to click the <em>Save</em> button!</p>"),
+  ];
+  return $definitions;
+}
+
+/**
+ * Implements callback_checklistapi_checklist_items() for launch_checklist.
+ */
+function launch_checklist_checklistapi_checklist_items() {
+
+  // Get all the available routes.
+  $checklist_routes = [];
+  $checklist_routes = routes();
+
+  // Populate the array with content sections and return the whole thing.
+  $sections_array                      = [];
+  $sections_array["01_general"]        = section_01_general($checklist_routes);
+  $sections_array["02_browser_checks"] = section_02_browser_checks($checklist_routes);
+  $sections_array["03_forms"]          = section_03_forms($checklist_routes);
+  $sections_array["section_04_seo"]    = section_04_seo($checklist_routes);
+  $sections_array["05_permissions"]    = section_05_permissions($checklist_routes);
+  $sections_array["06_content"]        = section_06_content($checklist_routes);
+  $sections_array["07_gdpr_privacy"]   = section_07_gdpr_privacy($checklist_routes);
+  $sections_array["08_security"]       = section_08_security($checklist_routes);
+  $sections_array["09_database"]       = section_09_database($checklist_routes);
+  $sections_array["10_theme"]          = section_10_theme($checklist_routes);
+  $sections_array["11_accessibility"]  = section_11_accessibility($checklist_routes);
+  $sections_array["12_drupal_modules"] = section_12_drupal_modules($checklist_routes);
+  $sections_array["13_other"]          = section_13_other($checklist_routes);
+  $sections_array["14_printability"]   = section_14_printability($checklist_routes);
+  return $sections_array;
+
+}

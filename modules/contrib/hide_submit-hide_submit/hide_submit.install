@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * {@inheritdoc}
+ * Hide the submit button after clicked to prevent/reduce duplicate postings.
+ *
+ * Installation and update procedures are defined in this file.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function hide_submit_uninstall() {
+  // Delete the configuration settings.
+  \Drupal::configFactory()->getEditable('hide_submit.settings')->delete();
+}

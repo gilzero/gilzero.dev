@@ -1,0 +1,30 @@
+one:
+  css:
+    theme:
+      css/one.css: {}
+
+two:
+  css:
+    theme:
+      css/two.css: {}
+  dependencies:
+    - refreshless_turbo_stylesheet_test/one
+
+three:
+  css:
+    theme:
+      css/three.css: {}
+  dependencies:
+    - refreshless_turbo_stylesheet_test/two
+
+four:
+  css:
+    theme:
+      css/four.css: {}
+  dependencies:
+    - refreshless_turbo_stylesheet_test/five
+
+five:
+  css:
+    theme:
+      css/five.css: {}

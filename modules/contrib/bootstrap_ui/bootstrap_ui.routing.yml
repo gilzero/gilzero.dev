@@ -1,0 +1,7 @@
+bootstrap.settings:
+  path: '/admin/config/user-interface/bootstrap'
+  defaults:
+    _form: '\Drupal\bootstrap_ui\Form\BootstrapSettings'
+    _title: 'Bootstrap UI'
+  requirements:
+    _permission: 'administer bootstrap ui'

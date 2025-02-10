@@ -1,0 +1,23 @@
+{
+  "name": "drupal/git_info",
+  "description": "Some useful helpers to display info about the revision of your codebase on the site.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "keywords": ["Drupal"],
+  "homepage": "https://www.drupal.org/project/git_info",
+  "authors": [
+    {
+      "name": "Eirik Morland (eiriksm)",
+      "homepage": "https://www.drupal.org/u/eiriksm",
+      "role": "Maintainer"
+    }
+  ],
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/git_info",
+    "source": "https://git.drupalcode.org/project/git_info"
+  },
+  "require": {
+    "eiriksm/gitinfo": "^4.1.0"
+  }
+}

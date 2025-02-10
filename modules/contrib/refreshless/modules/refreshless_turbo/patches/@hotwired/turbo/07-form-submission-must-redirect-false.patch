@@ -1,0 +1,13 @@
+diff --git a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+index fc485d4..05111a4 100644
+--- a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
++++ b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+@@ -4109,7 +4109,7 @@ Copyright © 2024 37signals LLC
+ 
+     submitForm(form, submitter) {
+       this.stop();
+-      this.formSubmission = new FormSubmission(this, form, submitter, true);
++      this.formSubmission = new FormSubmission(this, form, submitter, false);
+ 
+       this.formSubmission.start();
+     }

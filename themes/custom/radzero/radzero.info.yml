@@ -1,0 +1,38 @@
+name: radzero
+description: ''
+screenshot: screenshot.png
+'alt text': 'radzero theme screenshot'
+core_version_requirement: ^11
+engine: twig
+type: theme
+'base theme': radix
+starterkit: true
+'interface translation project': radzero
+'interface translation server pattern': themes/custom/radzero/translations/%language.po
+regions:
+  navbar_branding: 'Navbar branding'
+  navbar_left: 'Navbar left'
+  navbar_right: 'Navbar right'
+  header: Header
+  content: Content
+  page_bottom: 'Page bottom'
+  footer: Footer
+libraries:
+  - radzero/style
+ckeditor5-stylesheets:
+  - build/css/main.style.css
+libraries-extend:
+  core/drupal.ajax:
+    - radzero/drupal.ajax
+  core/drupal.checkbox:
+    - radzero/drupal.checkbox
+  core/drupal.message:
+    - radzero/drupal.message
+  core/drupal.progress:
+    - radzero/drupal.progress
+  clientside_validation_jquery/cv.jquery.validate:
+    - radzero/jquery.validate
+version: 1.0.0
+project: radix
+datestamp: 1737210935
+generator: 'radix_starterkit:6.0.1'

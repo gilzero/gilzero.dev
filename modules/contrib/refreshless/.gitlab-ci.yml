@@ -1,0 +1,182 @@
+################
+# DrupalCI GitLabCI template
+#
+# Gitlab-ci.yml to replicate DrupalCI testing for Contrib
+#
+# With thanks to:
+#   * The GitLab Acceleration Initiative participants
+#   * DrupalSpoons
+################
+
+################
+# Guidelines
+#
+# This template is designed to give any Contrib maintainer everything they need to test, without requiring modification. It is also designed to keep up to date with Core Development automatically through the use of include files that can be centrally maintained.
+#
+# However, you can modify this template if you have additional needs for your project.
+################
+
+################
+# Includes
+#
+# Additional configuration can be provided through includes.
+# One advantage of include files is that if they are updated upstream, the changes affect all pipelines using that include.
+#
+# Includes can be overridden by re-declaring anything provided in an include, here in gitlab-ci.yml
+# https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
+################
+
+include:
+  ################
+  # DrupalCI includes:
+  # As long as you include this, any future includes added by the Drupal Association will be accessible to your pipelines automatically.
+  # View these include files at https://git.drupalcode.org/project/gitlab_templates/
+  ################
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - '/includes/include.drupalci.main.yml'
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+  # Local includes, allowing sub-modules to define their own configurations,
+  # steps, variables, etc.
+  #
+  # @see https://docs.gitlab.com/ee/ci/yaml/index.html#includelocal
+  - local: '/modules/refreshless_turbo/.gitlab-ci.include.yml'
+
+################
+# Pipeline configuration variables
+#
+# These are the variables provided to the Run Pipeline form that a user may want to override.
+#
+# Docs at https://git.drupalcode.org/project/gitlab_templates/-/blob/1.0.x/includes/include.drupalci.variables.yml
+################
+variables:
+  _PHPUNIT_TESTGROUPS: 'refreshless'
+  # Skip the following for now.
+  SKIP_CSPELL: '1'
+  SKIP_ESLINT: '1'
+  SKIP_PHPCS: '1'
+  SKIP_PHPSTAN: '1'
+  SKIP_STYLELINT: '1'
+
+composer:
+  variables:
+    # This must be scoped to this job as it'll get overwritten if it's set
+    # globally.
+    #
+    # @see https://project.pages.drupalcode.org/gitlab_templates/info/customizations/
+    DRUPAL_CORE: '10.3.x'
+
+# # This installs modern Yarn and runs yarn install.
+# yarn:
+#   stage: build
+#   needs:
+#     - composer
+#   # Use artifacts to copy codebase to subsequent jobs.
+#   # See https://lorisleiva.com/laravel-deployment-using-gitlab-pipelines/.
+#   artifacts:
+#     expire_in: 1 week
+#     expose_as: 'web-yarn'
+#     when: always
+#     exclude:
+#       - .git
+#       - .git/**/*
+#     paths:
+#       - .
+#   script:
+#     # In case Corepack isn't enabled in Node.js, we have to do that here.
+#     - corepack enable
+#     # At the time of writing, the Node.js in Drupal.org GitLab CI is 18.x, which
+#     # doesn't have the 'corepack use' command that newer versions of Corepack
+#     # offer so we have to explicitly set a Yarn version here. Note that this
+#     # upgrades the global Yarn so that we can install the local Yarn in the next
+#     # step. The default version of Yarn is 1.x which doesn't understand the
+#     # 'yarn set' command and will fail.
+#     #
+#     # @see https://nodejs.org/docs/latest-v18.x/api/corepack.html
+#     - corepack prepare yarn@4.5.0 --activate
+#     # Now that the global Yarn understands the 'yarn set' command, set the local
+#     # Yarn to 4.x.
+#     - yarn set version 4.5.0
+#     # When Yarn detects it's running in a CI environment, it defaults to
+#     # --immutable which would cause our yarn install to fail with an error since
+#     # we don't currently ship with a yarn.lock; this tells Yarn to not do that.
+#     - yarn install --no-immutable
+
+# # Note that we have to set up a separate Yarn job that needs "composer (next
+# # major)" because if we set needs "yarn" in "phpunit (next major)", it would
+# # use "composer" in addition to composer (next major)" which would result in a
+# # failure due to incorrect dependencies. Keeping them as a separate chain of
+# # needs is necessary because of this.
+# yarn (next major):
+#   extends: yarn
+#   needs:
+#     - job: "composer (next major)"
+#       optional: true
+
+# phpunit:
+#   needs:
+#     - composer
+#     # Required for our functional JavaScript tests.
+#     - yarn
+
+# phpunit (next major):
+#   needs:
+#     - job: "composer (next major)"
+#       optional: true
+#     # Required for our functional JavaScript tests.
+#     - job: "yarn (next major)"
+#       optional: true
+
+pages:
+  before_script:
+    # This copies our assets from the repository root to the docs directory so
+    # that they get deployed with our documentation.
+    - 'cp -vr assets docs/assets'
+
+###################################################################################
+#
+#                                        *
+#                                       /(
+#                                      ((((,
+#                                    /(((((((
+#                                   ((((((((((*
+#                                ,(((((((((((((((
+#                              ,(((((((((((((((((((
+#                            ((((((((((((((((((((((((*
+#                         *(((((((((((((((((((((((((((((
+#                       ((((((((((((((((((((((((((((((((((*
+#                    *((((((((((((((((((  .((((((((((((((((((
+#                  ((((((((((((((((((.       /(((((((((((((((((*
+#                /(((((((((((((((((            .(((((((((((((((((,
+#             ,((((((((((((((((((                 ((((((((((((((((((
+#           .((((((((((((((((((((                   .(((((((((((((((((
+#          (((((((((((((((((((((((                     ((((((((((((((((/
+#        (((((((((((((((((((((((((((/                    ,(((((((((((((((*
+#      .((((((((((((((/  /(((((((((((((.                   ,(((((((((((((((
+#     *((((((((((((((      ,(((((((((((((/                   *((((((((((((((.
+#    ((((((((((((((,          /(((((((((((((.                  ((((((((((((((,
+#   (((((((((((((/              ,(((((((((((((*                 ,(((((((((((((,
+#  *(((((((((((((                .(((((((((((((((                ,(((((((((((((
+#  ((((((((((((/                /((((((((((((((((((.              ,((((((((((((/
+# (((((((((((((              *(((((((((((((((((((((((*             *((((((((((((
+# (((((((((((((            ,(((((((((((((..(((((((((((((           *((((((((((((
+# ((((((((((((,          /((((((((((((*      /((((((((((((/         ((((((((((((
+# (((((((((((((        /((((((((((((/          (((((((((((((*       ((((((((((((
+# (((((((((((((/     /((((((((((((               ,((((((((((((,    *((((((((((((
+#  ((((((((((((((  *(((((((((((/                   *((((((((((((.  ((((((((((((/
+#  *((((((((((((((((((((((((((,                      /(((((((((((((((((((((((((
+#   (((((((((((((((((((((((((                         ((((((((((((((((((((((((,
+#   .(((((((((((((((((((((((/                         ,(((((((((((((((((((((((
+#     ((((((((((((((((((((((/                         ,(((((((((((((((((((((/
+#      *(((((((((((((((((((((                         (((((((((((((((((((((,
+#       ,(((((((((((((((((((((,                      ((((((((((((((((((((/
+#         ,(((((((((((((((((((((*                  /((((((((((((((((((((
+#            ((((((((((((((((((((((,           ,/((((((((((((((((((((,
+#              ,(((((((((((((((((((((((((((((((((((((((((((((((((((
+#                 .(((((((((((((((((((((((((((((((((((((((((((((
+#                     .((((((((((((((((((((((((((((((((((((,.
+#                          .,(((((((((((((((((((((((((.
+#
+###################################################################################

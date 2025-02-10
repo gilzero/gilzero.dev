@@ -1,0 +1,24 @@
+{
+    "name": "drupal/postlight_parser",
+    "type": "drupal-module",
+    "description": "This module extracts the bits that humans care about from any URL you give it. That includes article content, titles, authors, published dates, excerpts, lead images, and more.",
+    "keywords": ["Drupal", "Mercury", "Postlight", "Embera", "Graby", "parser"],
+    "license": "GPL-2.0+",
+    "homepage": "https://www.drupal.org/project/postlight_parser",
+    "authors": [
+        {
+            "name": "NGUYEN Bao",
+            "homepage": "https://www.drupal.org/u/lazzyvn",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/postlight_parser",
+        "source": "http://cgit.drupalcode.org/postlight_parser"
+    },
+    "require": {
+        "drupal/core": "^9 || ^10 || ^11",
+        "fivefilters/readability.php": "^3",
+        "mpratt/embera": "^2"
+    }
+}

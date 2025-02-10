@@ -1,0 +1,8 @@
+postlight.parser:
+  path: 'parser/{parser}'
+  defaults:
+    _title: 'Postlight Parser'
+    _controller: '\Drupal\postlight_parser\Controller\ParserController::parser'
+  methods: [GET]
+  requirements:
+    _permission: 'access content'

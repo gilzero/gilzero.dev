@@ -1,0 +1,11 @@
+name: List.js CDN Alter
+type: module
+description: Alters the listjs library to use cdn. This is required for the tests, as they do not have the js library installed.
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - listjs:listjs
+
+# Information added by Drupal.org packaging script on 2024-08-22
+version: '2.0.1'
+project: 'listjs'
+datestamp: 1724322091

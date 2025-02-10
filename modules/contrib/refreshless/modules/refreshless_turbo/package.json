@@ -1,0 +1,26 @@
+{
+  "name": "drupal-refreshless-turbo",
+  "description": "RefreshLess implementation using the Hotwire Turbo library.",
+  "version": "2.0.0",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://www.drupal.org/project/refreshless",
+  "scripts": {
+    "patch-debug-order": "yarn exec 'find \"patches/@hotwired/turbo\" -type f -name \"*.patch\" -exec echo '{}' \\; | sort -V'",
+    "patch-turbo": "yarn exec 'find \"patches/@hotwired/turbo\" -type f -name \"*.patch\" -exec patch -p3 --force --no-backup-if-mismatch --version-control none \"vendor/@hotwired/turbo/dist/turbo.es2017-umd.js\" '{}' \\; | sort -V'",
+    "unpatch-turbo": "yarn exec 'find \"patches/@hotwired/turbo\" -type f -name \"*.patch\" -exec patch -p3 --reverse --no-backup-if-mismatch --version-control none \"vendor/@hotwired/turbo/dist/turbo.es2017-umd.js\" '{}' \\; | sort -V'"
+  },
+  "devDependencies": {
+    "@consensus.enterprises/pnp-vendorize": "^1.0.0"
+  },
+  "dependencies": {
+    "@hotwired/turbo": "8.0.10",
+    "js-cookie": "^3.0.5"
+  },
+  "vendorize": {
+    "packages": [
+      "@hotwired/turbo",
+      "js-cookie"
+    ],
+    "gitIgnore": false
+  }
+}

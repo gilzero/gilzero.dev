@@ -1,0 +1,7 @@
+administer hide submit:
+  title: 'Administer hide submit module'
+  description: 'Perform administration tasks for hide submit module.'
+
+bypass hide submit:
+  title: 'Bypass hide submit button'
+  description: 'Disables hide_submit functionality for users'

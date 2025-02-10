@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.push_framework
+    - field.field.node.page.body
+    - node.type.page
+  module:
+    - text
+    - user
+third_party_settings: {  }
+id: node.page.push_framework
+targetEntityType: node
+bundle: page
+mode: push_framework
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  links: true

@@ -1,0 +1,795 @@
+<?php
+
+/**
+ * @file
+ * Drupal`s integration with Bootstrap framework.
+ *
+ * Bootstrap is a free and open-source CSS framework directed at responsive,
+ * mobile-first front-end web development. It contains HTML, CSS and
+ * JavaScript-based design templates for typography, forms, buttons,
+ * navigation, and other interface components.
+ *
+ * GitHub:  https://github.com/twbs/bootstrap
+ * Website: https://getbootstrap.com
+ * license: MIT licensed
+ */
+
+use Drupal\Core\Asset\LibrariesDirectoryFileFinder;
+use Drupal\Core\DrupalKernel;
+use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * Implements hook_help().
+ */
+function bootstrap_ui_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.bootstrap_ui':
+      $output  = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Bootstrap UI is an innovative and powerful Drupal module that provides professional settings, enabling you to effectively utilize the powerful Bootstrap framework in your site themes. This module offers a wide range of features and customization options, enhancing your ability to seamlessly integrate and manage Bootstrap within your Drupal user interfaces.') . '</p>';
+      $output .= '<h3>' . t('Usage') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt><strong>' . t('Installing Bootstrap library') . '</strong></dt>';
+      $output .= '<dd><p>' . t('Download the desired version of the Bootstrap CSS framework from GitHub <a target="_blank" href=":bootstrap_download">here</a>.', [':bootstrap_download' => 'https://github.com/twbs/bootstrap/tags']) . '</p></dd>';
+      $output .= '<dd><p>' . t('Create a libraries directory in the root if it doesn\'t already exist, and then create a "bootstrap" directory inside it. The path should be "/libraries/bootstrap".') . '</p></dd>';
+      $output .= '<dd><p>' . t('Place the required files in the /libraries/bootstrap directory. For the distribution download (Compiled CSS and JS), the structure should be:') . '</p>';
+      $output .= '<pre><code>';
+      $output .= '- /libraries/bootstrap/css/bootstrap.min.css' . "\n";
+      $output .= '- /libraries/bootstrap/js/bootstrap.min.js' . "\n";
+      $output .= '</code></pre></dd>';
+      $output .= '<dd><p>' . t('For source files, the structure should be:') . '</p>';
+      $output .= '<pre><code>';
+      $output .= '- /libraries/bootstrap/dist/css/bootstrap.min.css' . "\n";
+      $output .= '- /libraries/bootstrap/dist/js/bootstrap.min.js' . "\n";
+      $output .= '</code></pre></dd>';
+      $output .= '<br>';
+      $output .= '<dt><strong>' . t('Bootstrap UI settings page') . '</strong></dt>';
+      $output .= '<dd><p>' . t('Go to the <a href=":bootstrap_settings">Bootstrap UI</a> configuration page in your Drupal admin menu.', [':bootstrap_settings' => Url::fromRoute('bootstrap.settings')->setAbsolute()->toString()]) . '</p></dd>';
+      $output .= '<dd><p>' . t('You can change the default settings if needed, such as:') . '</p></dd>';
+      $output .= '<div><ul>';
+      $output .= '<li><strong>' . t('Load Bootstrap') . '</strong><br><em>' . t('If enabled, this module will attempt to load the Bootstrap framework for your site.') . '</em></li>';
+      $output .= '<li><strong>' . t('Support RTL') . '</strong><br><em>' . t('If the default language or one of the languages of your site is RTL (right-to-left), such as Persian or Arabic, enable this option to support RTL for the Bootstrap theme. Note: This module automatically uses the RTL version of Bootstrap or an RTL patch (for older Bootstrap versions) only on pages that require RTL support.') . '</em></li>';
+      $output .= '<li><strong>' . t('Hide warning') . '</strong><br><em>' . t('Enable this option to turn off the reminder warning "Bootstrap library is missing" if you prefer to use the CDN option instead.') . '</em></li>';
+      $output .= '<li><strong>' . t('Attach method') . '</strong><br><em>' . t('This option allows you to choose whether to load Bootstrap on your site pages using the locally installed library or the CDN. If the local library is not installed, this option will be disabled and will default to using the CDN. Note: After installing the Bootstrap framework, remember to set this option to "Local" to use the local libraries instead of the CDN.') . '</em></li>';
+      $output .= '<li><strong>' . t('Version') . '</strong><br><em>' . t('The version selection option is only active when using the CDN mode. You can choose the main Bootstrap versions or select "Other Versions" to use previously released versions. Note: When using the Local mode, the installed library version is automatically detected.') . '</em></li>';
+      $output .= '<li><strong>' . t('Build variant') . '</strong><br><em>' . t('Select whether to use the library in Production or Development mode. This lets you choose between the non-minimized (Development) and minimized (Production) versions. These settings work with both local and CDN options.') . '</em></li>';
+      $output .= '<li><strong>' . t('Usability') . '</strong><br><em>' . t('Use this section to configure the desired files for specific themes or assign them to specified pages. For example, you can choose to use only the CSS files without loading the JavaScript files, or use only the Bootstrap Grid CSS for particular cases. You can also select Bootstrap files without the Bundle, etc., all within the chosen theme.') . '</em></li>';
+      $output .= '</ul></div>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Finds the installation path of a specified library.
+ *
+ * This function searches for the library in these directories:
+ * - Current site: sites/default/libraries
+ * - Root: libraries
+ * - Installation profile: profiles/my_install_profile/libraries
+ * The first location found will be used.
+ *
+ * @return string|false
+ *   The real path to the library file relative to the root directory. FALSE
+ *   if not found.
+ */
+function bootstrap_ui_find_library($library_name = 'bootstrap') {
+  // Get the current request.
+  $request = \Drupal::request();
+
+  // Determine the site path.
+  if (\Drupal::hasService('kernel')) {
+    $site_path = \Drupal::getContainer()->getParameter('site.path');
+  }
+  else {
+    // If there is no kernel available yet, call the static findSitePath().
+    $site_path = DrupalKernel::findSitePath($request);
+  }
+
+  // Get the application root.
+  $root = DRUPAL_ROOT;
+
+  // Get the profile extension list service.
+  $profile_extension_list = \Drupal::service('extension.list.profile');
+
+  // Get the current install profile.
+  $install_profile = \Drupal::installProfile();
+
+  // Create an instance of LibrariesDirectoryFileFinder.
+  $libraries_finder = new LibrariesDirectoryFileFinder($root, $site_path, $profile_extension_list, $install_profile);
+
+  // Find the library in the supported directories.
+  return $libraries_finder->find($library_name);
+}
+
+/**
+ * Checks if the Bootstrap library is installed.
+ *
+ * This function manually verifies the presence of the Bootstrap library by
+ * checking for the required CSS files due to potential Bootstrap UI settings
+ * that may limit loading certain file types.
+ *
+ * @return string|false
+ *   Returns 'dist' if the library is found in the root directory,
+ *   'code' if found in the 'dist' directory, or FALSE if not found.
+ */
+function bootstrap_ui_check_installed() {
+  // Find the path of the Bootstrap library.
+  $library_path = bootstrap_ui_find_library();
+
+  // Initialize the Bootstrap installation status.
+  $bootstrap = FALSE;
+
+  // If the library path is found, proceed to check for the required files.
+  if ($library_path) {
+    // Check for the presence of 'bootstrap.min.css' in the 'dist' directory.
+    $dist_path = _bootstrap_ui_build_manual_file_path($library_path);
+    if (file_exists($dist_path)) {
+      $bootstrap = 'dist';
+    }
+    // If not found, check for 'bootstrap.min.css' in the 'code' directory.
+    else {
+      $code_path = _bootstrap_ui_build_manual_file_path($library_path, 'code');
+      if (file_exists($code_path)) {
+        $bootstrap = 'code';
+      }
+    }
+  }
+
+  // Return the installation status of the Bootstrap library.
+  return $bootstrap;
+}
+
+/**
+ * Identify the installed Bootstrap library version.
+ *
+ * This function detects the version of the Bootstrap library by checking
+ * the installed library and reading the version information from the library
+ * files.
+ *
+ * @return string|null
+ *   The Bootstrap version string if found, otherwise NULL.
+ */
+function bootstrap_ui_detect_version() {
+  // Detect if the Bootstrap library is installed and its source type.
+  $source = bootstrap_ui_check_installed();
+
+  // Return an empty string if the library does not exist.
+  if ($source === FALSE) {
+    return '';
+  }
+
+  // Find the path of the Bootstrap library.
+  $library_path = bootstrap_ui_find_library();
+
+  // Build the path to the Bootstrap file based on the detected source type.
+  $file_path = _bootstrap_ui_build_manual_file_path($library_path, $source);
+
+  // Check if the Bootstrap file exists and read its content.
+  if (file_exists($file_path)) {
+    $file_content = file_get_contents($file_path);
+
+    // Use a regex to match and extract the Bootstrap version.
+    if (preg_match('/Bootstrap\s*v?(\d+\.\d+\.\d+)/i', $file_content, $matches)) {
+      return $matches[1];
+    }
+  }
+
+  // Return NULL if the version cannot be detected.
+  return NULL;
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Use Libraries API to load the JS & CSS files into the header.
+ */
+function bootstrap_ui_page_attachments(array &$attachments) {
+  // Don't add the JavaScript and CSS during installation.
+  if (InstallerKernel::installationAttempted()) {
+    return;
+  }
+
+  // Load the Bootstrap configuration settings.
+  $config = \Drupal::config('bootstrap_ui.settings');
+
+  // If the library is not set to use Bootstrap and another library is used,
+  // such as the MDBootstrap module for loading Material Design for Bootstrap.
+  if (!$config->get('load') || $config->get('library') != 'bootstrap') {
+    return;
+  }
+
+  // Don't add the JavaScript and CSS on specified paths or themes.
+  if (!_bootstrap_ui_check_theme() || !_bootstrap_ui_check_path()) {
+    return;
+  }
+
+  // Get Bootstrap configuration from user settings.
+  $existed = bootstrap_ui_check_installed();
+  $version = $config->get('version');
+  $variant = $config->get('build.variant') == '1' ? '.min' : '';
+  $methods = $existed !== FALSE ? $config->get('method') : 'cdn';
+
+  // Automatically detect the local library version when the method
+  // is not CDN and the library exists in the root libraries directory.
+  if ($existed && (empty($version) || $version != bootstrap_ui_detect_version()) && $methods != 'cdn') {
+    $version = bootstrap_ui_detect_version();
+    \Drupal::configFactory()->getEditable('bootstrap_ui.settings')->set('version', $version)->save();
+  }
+
+  // Check the language direction to attach the Bootstrap RTL patch
+  // for supporting Persian, Farsi, or Arabic language characters.
+  $language_direction = \Drupal::languageManager()->getCurrentLanguage()->getDirection();
+  $rtl = $language_direction == 'rtl' && $config->get('rtl') ? '.rtl' : '';
+
+  // Load Bootstrap library now.
+  if ($methods == 'cdn') {
+    // Attach bootstrap from CDN with variant configuration.
+    if (intval($version) >= 5) {
+      // Create dynamic discovery library address from configuration.
+      $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap.cdn' . $rtl . $variant;
+    }
+    else {
+      // Create dynamic discovery library address from configuration
+      // with separate RTL support.
+      $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap.cdn' . $variant;
+
+      // Support RTL with patch extended by Bootstrap UI module.
+      if (!empty($rtl)) {
+        $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap' . $rtl . $variant;
+
+        // Add JavaScript patch for Bootstrap version 4.x only.
+        if (intval($version) == 4) {
+          $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap.patch';
+        }
+      }
+    }
+  }
+  else {
+    // Attach bootstrap from local libraries with variant configuration.
+    $distribution = ($existed == 'code' ? '-dist' : '');
+    if (intval($version) >= 5) {
+      // Create dynamic discovery library address from configuration.
+      $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap' . $rtl . $variant . $distribution;
+    }
+    else {
+      // Create dynamic discovery library address from configuration
+      // with separate RTL support.
+      $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap' . $variant . $distribution;
+
+      // Support RTL with patch extended by Bootstrap UI module.
+      if (!empty($rtl)) {
+        $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap' . $rtl . $variant;
+
+        // Add JavaScript patch for Bootstrap version 4.x only.
+        if (intval($version) == 4) {
+          $attachments['#attached']['library'][] = 'bootstrap_ui/bootstrap.patch';
+        }
+      }
+    }
+  }
+
+}
+
+/**
+ * Provides the name of the Bootstrap libraries.
+ *
+ * @return array
+ *   An array with the default Bootstrap library names.
+ */
+function bootstrap_ui_library_names() {
+  // Default Bootstrap library name.
+  $library_name['bootstrap'] = t('Bootstrap');
+  return \Drupal::moduleHandler()->invokeAll('bootstrap_ui_library_name', [$library_name]);
+}
+
+/**
+ * Provides a list of Bootstrap version releases.
+ *
+ * @return array
+ *   An array of Bootstrap releases grouped by major version.
+ */
+function bootstrap_ui_version_releases() {
+  return [
+    // Group for v5.x releases.
+    'v5.x' => [
+      '5.3.3' => '5.3.3',
+      '5.3.2' => '5.3.2',
+      '5.3.1' => '5.3.1',
+      '5.3.0' => '5.3.0',
+      '5.2.3' => '5.2.3',
+      '5.2.2' => '5.2.2',
+      '5.2.1' => '5.2.1',
+      '5.2.0' => '5.2.0',
+      '5.1.3' => '5.1.3',
+      '5.0.2' => '5.0.2',
+    ],
+    // Group for v4.x releases.
+    'v4.x' => [
+      '4.6.2' => '4.6.2',
+      '4.6.1' => '4.6.1',
+      '4.5.3' => '4.5.3',
+      '4.4.1' => '4.4.1',
+      '4.3.1' => '4.3.1',
+      '4.2.1' => '4.2.1',
+      '4.1.3' => '4.1.3',
+    ],
+    // Group for v3.x releases.
+    'v3.x' => [
+      '3.4.1' => '3.4.1',
+      '3.3.7' => '3.3.7',
+      '3.2.0' => '3.2.0',
+      '3.1.1' => '3.1.1',
+    ],
+    // Group for v2.x releases.
+    'v2.x' => [
+      '2.3.2' => '2.3.2',
+    ],
+    // Group for v1.x releases.
+    'v1.x' => [
+      '1.4.0' => '1.4.0',
+    ],
+  ];
+}
+
+/**
+ * Provides a list of Bootstrap version options.
+ *
+ * @return array
+ *   An associative array of Bootstrap versions grouped by release type.
+ */
+function bootstrap_ui_version_options() {
+  return [
+    // Group for v5 releases.
+    'v5 releases' => [
+      '5.3.3' => '5.3.3',
+      '5.3.2' => '5.3.2',
+      '5.2.3' => '5.2.3',
+      '5.1.3' => '5.1.3',
+      '5.0.2' => '5.0.2',
+    ],
+    // Group for previous releases.
+    'Previous releases' => [
+      '4.6.2' => '4.6.2',
+      '3.4.1' => '3.4.1',
+      '2.3.2' => '2.3.2',
+    ],
+    // Group for all other releases.
+    'All releases' => [
+      'other' => t('Other versions'),
+    ],
+  ];
+}
+
+/**
+ * Implements hook_library_info_alter().
+ *
+ * Alters the library information to customize the Bootstrap integration
+ * based on the settings configured in the Bootstrap UI module.
+ */
+function bootstrap_ui_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'bootstrap_ui') {
+    // Load the Bootstrap configuration settings.
+    $configs = \Drupal::config('bootstrap_ui.settings');
+    $library = $configs->get('library');
+    $version = $configs->get('version');
+
+    $file_types = $configs->get('file_types');
+
+    if ($library == 'bootstrap' && !empty($version)) {
+      // Define the remote URLs for the dist and source code versions.
+      $remote_dist = 'https://github.com/twbs/bootstrap/releases/download/v' . $version . '/bootstrap-' . $version . '-dist.zip';
+      $remote_code = 'https://github.com/twbs/bootstrap/archive/v' . $version . '.zip';
+
+      // Set remote download URL by current version.
+      foreach ($libraries as $name => $library) {
+        if (isset($library['remote'])) {
+          // Set the remote URL based on whether the library
+          // is the dist or source code version.
+          $libraries[$name]['remote'] = strpos($library['remote'], 'dist') !== FALSE ? $remote_dist : $remote_code;
+        }
+        else {
+          // Skip local for library.
+          continue;
+        }
+
+        if (isset($library['version'])) {
+          // Set the library version based on the configuration.
+          $libraries[$name]['version'] = $version;
+        }
+
+        $variant = '';
+        $external = FALSE;
+        $minified = FALSE;
+
+        // Determine the variant (minified or not).
+        if (strpos($name, 'min') !== FALSE) {
+          $variant = '.min';
+          $minified = TRUE;
+        }
+
+        // Determine the file URL based on whether it's a CDN or local.
+        $file_url = strpos($library['remote'], 'dist') !== FALSE ? '/libraries/bootstrap' : '/libraries/bootstrap/dist';
+        $css_type = $file_types['css'];
+        $js_types = $file_types['js'];
+
+        // Modify Bootstrap CDN library by selected version.
+        if (strpos($name, 'cdn') !== FALSE) {
+          $libraries[$name]['remote'] = '//cdn.jsdelivr.net/npm/bootstrap@' . $version . '/';
+
+          // Default CDN for Bootstrap greater than 2.x.
+          $file_url = $libraries[$name]['remote'] . 'dist';
+          $external = TRUE;
+
+          // Change default CDN for Bootstrap under than 3.x.
+          if (intval($version) <= 2) {
+            $file_url = '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/' . $version;
+          }
+        }
+
+        // Build dynamic URL of the jsdelivr CDN from chosen version.
+        $css_file = $file_url . '/css/bootstrap' . $variant . '.css';
+        $rtl_file = $file_url . '/css/bootstrap.rtl' . $variant . '.css';
+        $js_files = intval($version) >= 4 && $js_types == 'bundle' ? $file_url . '/js/bootstrap.bundle' . $variant . '.js' : $file_url . '/js/bootstrap' . $variant . '.js';
+
+        $css_files = [];
+        $rtl_files = [];
+        if (!$css_type) {
+          // Define CSS files for different Bootstrap versions.
+          switch (intval($version)) {
+            case '5':
+            case '4':
+              $particles = $file_types['grid'] || $file_types['reboot'] || $file_types['utilities'] ?? FALSE;
+              $css_files['reboot'] = $file_types['reboot'] ? $file_url . '/css/bootstrap-reboot' . $variant . '.css' : NULL;
+              $css_files['grid'] = $file_types['grid'] ? $file_url . '/css/bootstrap-grid' . $variant . '.css' : NULL;
+              if (intval($version) >= '5') {
+                $css_files['utilities'] = $file_types['utilities'] ? $file_url . '/css/bootstrap-utilities' . $variant . '.css' : NULL;
+                $rtl_files['reboot'] = $file_types['reboot'] ? $file_url . '/css/bootstrap-reboot.rtl' . $variant . '.css' : NULL;
+                $rtl_files['grid'] = $file_types['grid'] ? $file_url . '/css/bootstrap-grid.rtl' . $variant . '.css' : NULL;
+                $rtl_files['utilities'] = $file_types['utilities'] ? $file_url . '/css/bootstrap-utilities.rtl' . $variant . '.css' : NULL;
+              }
+              break;
+
+            case '3':
+              $particles = $file_types['theme'] ?? FALSE;
+              $css_files['theme'] = $file_types['theme'] ? $file_url . '/css/bootstrap-theme' . $variant . '.css' : NULL;
+              break;
+
+            case '2':
+              $particles = $file_types['responsive'] ?? FALSE;
+              $css_files['responsive'] = $file_types['responsive'] ? $file_url . '/css/bootstrap-responsive' . $variant . '.css' : NULL;
+              break;
+          }
+        }
+
+        // Update CDN for CSS file.
+        if (isset($library['css'])) {
+          unset($libraries[$name]['css']);
+          if ($css_type) {
+            $libraries[$name]['css']['theme'][$css_file] = [];
+            if ($external) {
+              $libraries[$name]['css']['theme'][$css_file]['type'] = 'external';
+            }
+            if ($minified) {
+              $libraries[$name]['css']['theme'][$css_file]['minified'] = $minified;
+            }
+          }
+          elseif ($particles) {
+            foreach ($css_files as $css_particle) {
+              if ($css_particle) {
+                $libraries[$name]['css']['theme'][$css_particle] = [];
+                if ($external) {
+                  $libraries[$name]['css']['theme'][$css_particle]['type'] = 'external';
+                }
+                if ($minified) {
+                  $libraries[$name]['css']['theme'][$css_particle]['minified'] = $minified;
+                }
+              }
+            }
+          }
+        }
+
+        // Update CDN for RTL language CSS file.
+        if (intval($version) >= 5 && strpos($name, 'rtl') !== FALSE && isset($library['css'])) {
+          unset($libraries[$name]['css']);
+          if ($css_type) {
+            $libraries[$name]['css']['theme'][$rtl_file] = [];
+            if ($external) {
+              $libraries[$name]['css']['theme'][$rtl_file]['type'] = 'external';
+            }
+            if ($minified) {
+              $libraries[$name]['css']['theme'][$rtl_file]['minified'] = $minified;
+            }
+          }
+          elseif ($particles) {
+            foreach ($rtl_files as $rtl_particle) {
+              if ($rtl_particle) {
+                $libraries[$name]['css']['theme'][$rtl_particle] = [];
+                if ($external) {
+                  $libraries[$name]['css']['theme'][$rtl_particle]['type'] = 'external';
+                }
+                if ($minified) {
+                  $libraries[$name]['css']['theme'][$rtl_particle]['minified'] = $minified;
+                }
+              }
+            }
+          }
+        }
+
+        // Update CDN for JavaScript file.
+        if (isset($library['js'])) {
+          unset($libraries[$name]['js']);
+          if ($js_types != 'none') {
+            $libraries[$name]['js'][$js_files] = [];
+            if ($external) {
+              $libraries[$name]['js'][$js_files]['type'] = 'external';
+            }
+            if ($minified) {
+              $libraries[$name]['js'][$js_files]['minified'] = $minified;
+            }
+          }
+        }
+
+        // Update CDN for dependencies file (just for sort).
+        if (isset($library['dependencies'])) {
+          unset($libraries[$name]['dependencies']);
+          if ($js_types != 'none') {
+            $libraries[$name]['dependencies'][] = 'core/jquery';
+          }
+        }
+
+      }
+
+      $variant = '.min';
+      $minified = TRUE;
+      // Check build variant from configuration
+      // for development version.
+      if ($configs->get('build.variant') == '0') {
+        $variant = '';
+        $minified = FALSE;
+      }
+
+      // Additional settings for RTL in older Bootstrap versions.
+      // Check language direction to attach Bootstrap RTL patch
+      // to support Persian/Arabic language characters.
+      if (intval($version) < 5) {
+        $patch_version = intval($version) . '.x';
+        $patch_current = 'css/patch/' . $patch_version . '/bootstrap.rtl' . $variant . '.css';
+
+        $libraries['bootstrap.cdn.rtl']['version'] = 'VERSION';
+        $libraries['bootstrap.cdn.rtl']['css']['theme'][$patch_current] = ['minified' => $minified];
+
+        if (isset($libraries['bootstrap.rtl' . $variant])) {
+          unset($libraries['bootstrap.rtl' . $variant]);
+        }
+        $libraries['bootstrap.rtl' . $variant]['version'] = 'VERSION';
+        $libraries['bootstrap.rtl' . $variant]['css']['theme'][$patch_current] = ['minified' => $minified];
+      }
+    }
+
+  }
+}
+
+/**
+ * Constructs the file path for a specified Bootstrap file.
+ *
+ * @param string $library_path
+ *   Base path to the Bootstrap library.
+ * @param string $bootstrap
+ *   Library mode: 'dist' for distribution or 'code' for source code.
+ * @param string $file_name
+ *   File name without extension. Default is 'bootstrap'.
+ * @param string $type
+ *   File type: 'css' or 'js'. Default is 'css'.
+ * @param bool $minimized
+ *   Include '.min' suffix for minimized files. Default is TRUE.
+ * @param bool $bundle
+ *   Include '.bundle' suffix for JS files. Default is TRUE.
+ * @param bool $rtl
+ *   Include '.rtl' suffix for right-to-left CSS files. Default is FALSE.
+ *
+ * @return string
+ *   Constructed file path based on the provided parameters.
+ */
+function _bootstrap_ui_build_manual_file_path(string $library_path, string $bootstrap = 'dist', string $file_name = 'bootstrap', string $type = 'css', bool $minimized = TRUE, bool $bundle = TRUE, bool $rtl = FALSE): string {
+  // Construct the base path to the Bootstrap library.
+  $bootstrap_path = DRUPAL_ROOT . '/' . $library_path;
+
+  // Build the file suffix based on the provided parameters.
+  $rtl_suffix = $rtl && $type === 'css' ? '.rtl' : '';
+  $bundle_suffix = $bundle && $type === 'js' ? '.bundle' : '';
+  $min_suffix = $minimized ? '.min' : '';
+  $extension = '.' . $type;
+
+  // Construct the full path for source code and distribution.
+  $source_codes = $bootstrap_path . '/dist/' . $type . '/' . $file_name . $rtl_suffix . $bundle_suffix . $min_suffix . $extension;
+  $distribution = $bootstrap_path . '/' . $type . '/' . $file_name . $rtl_suffix . $bundle_suffix . $min_suffix . $extension;
+
+  // Return the appropriate path based on the bootstrap mode.
+  return $bootstrap === 'code' ? $source_codes : $distribution;
+}
+
+/**
+ * Check if Bootstrap should be active for the current URL.
+ *
+ * @param \Symfony\Component\HttpFoundation\Request $request
+ *   The request to use if provided, otherwise \Drupal::request() will be used.
+ * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+ *   The request stack.
+ *
+ * @return bool
+ *   TRUE if Bootstrap should be active for the current page.
+ */
+function _bootstrap_ui_check_path(Request $request = NULL, RequestStack $request_stack = NULL) {
+  // Use the provided request or get the current request.
+  if (!isset($request)) {
+    $request = \Drupal::request();
+  }
+
+  // Initialize match status as FALSE.
+  $page_match = FALSE;
+
+  // Check for the ?bootstrap=no parameter in the URL to deactivate Bootstrap.
+  $query = $request->query;
+  if ($query->get('bootstrap') !== NULL && $query->get('bootstrap') == 'no') {
+    return $page_match;
+  }
+
+  // Load the module configuration.
+  $config = \Drupal::config('bootstrap_ui.settings');
+  // Get the list of pages where Bootstrap should be active.
+  $pages = mb_strtolower(_bootstrap_ui_array_to_string($config->get('request_path.pages')));
+
+  // If no specific pages are configured, Bootstrap is active on all pages.
+  if (!$pages) {
+    return TRUE;
+  }
+
+  // Use the provided request stack or get the current request stack.
+  if (!isset($request_stack)) {
+    $request_stack = \Drupal::requestStack();
+  }
+  $current_request = $request_stack->getCurrentRequest();
+
+  // Get the current path.
+  $path = \Drupal::service('path.current')->getPath($current_request);
+  // Do not trim the trailing slash if it is the complete path.
+  $path = $path === '/' ? $path : rtrim($path, '/');
+
+  // Get the current language code.
+  $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  // Get the path alias and convert to lowercase.
+  $path_alias = mb_strtolower(\Drupal::service('path_alias.manager')->getAliasByPath($path, $langcode));
+
+  // Check if the path alias matches the configured pages.
+  $page_match = \Drupal::service('path.matcher')->matchPath($path_alias, $pages);
+  // Check the internal path if it differs from the path alias.
+  if ($path_alias != $path) {
+    $page_match = $page_match || \Drupal::service('path.matcher')->matchPath($path, $pages);
+  }
+
+  // Negate the match if configured to load on all pages except those listed.
+  $page_match = $config->get('request_path.negate') == 0 ? !$page_match : $page_match;
+
+  return $page_match;
+}
+
+/**
+ * Verify if the current theme is selected in the module settings.
+ *
+ * @return bool
+ *   TRUE if the current theme is selected, otherwise FALSE.
+ */
+function _bootstrap_ui_check_theme() {
+  // Load the Bootstrap UI module configuration.
+  $config = \Drupal::config('bootstrap_ui.settings');
+
+  // Get the name of the active theme.
+  $active_theme = \Drupal::theme()->getActiveTheme()->getName();
+
+  // Retrieve the list of valid themes from the configuration.
+  $valid_themes = $config->get('theme_groups.themes');
+
+  // If no themes are configured, Bootstrap should be active.
+  if (empty($valid_themes) || count($valid_themes) === 0) {
+    return TRUE;
+  }
+
+  // Get the visibility setting from the configuration.
+  $visibility = $config->get('theme_groups.negate');
+
+  // Check if the active theme is in the list of valid themes.
+  $theme_match = in_array($active_theme, $valid_themes);
+
+  // Determine the final match based on the visibility setting.
+  return !($visibility xor $theme_match);
+}
+
+/**
+ * Converts a multidimensional array into a single flattened array.
+ *
+ * @param array $array
+ *   The multidimensional array to be flattened.
+ *
+ * @return array
+ *   The flattened array.
+ */
+function _bootstrap_ui_array_flatten(array $array) {
+  $result = [];
+
+  array_walk_recursive($array, function ($element) use (&$result) {
+    $result[] = $element;
+  });
+
+  return $result;
+}
+
+/**
+ * Converts a text with lines (\n) into an array of non-empty trimmed lines.
+ *
+ * @param string $text
+ *   The text to be converted into an array.
+ *
+ * @return array|null
+ *   An array with non-empty trimmed lines or NULL if input is not a string.
+ */
+function _bootstrap_ui_string_to_array($text) {
+  // Check if input is a string.
+  if (!is_string($text)) {
+    return NULL;
+  }
+
+  // Normalize line endings to Unix style.
+  $text = str_replace("\r\n", "\n", $text);
+
+  // Split the text into lines and filter out empty lines.
+  $lines = array_filter(array_map('trim', explode("\n", $text)));
+
+  return $lines;
+}
+
+/**
+ * Converts an array of lines into a text with lines (\r\n).
+ *
+ * @param array $array
+ *   The array to be converted into a text string.
+ *
+ * @return string|null
+ *   A text string with lines separated by \r\n or NULL
+ *   if input is not an array.
+ */
+function _bootstrap_ui_array_to_string(array $array) {
+  // Check if input is an array.
+  if (!is_array($array)) {
+    return NULL;
+  }
+
+  // Convert the array to a string with \r\n line endings.
+  return implode("\r\n", array_map('trim', $array));
+}
+
+/**
+ * Converts an object or array to an associative array.
+ *
+ * @param mixed $data
+ *   The object or array to be converted.
+ *
+ * @return array
+ *   The converted associative array.
+ */
+function _bootstrap_ui_object_to_array($data) {
+  // Check if the data is an array or object.
+  if (is_array($data) || is_object($data)) {
+    $result = [];
+    // Iterate over each key-value pair in the data.
+    foreach ($data as $key => $value) {
+      // Recursively convert each value.
+      $result[$key] = _bootstrap_ui_object_to_array($value);
+    }
+    return $result;
+  }
+  // Return the data if it is neither an array nor an object.
+  return $data;
+}

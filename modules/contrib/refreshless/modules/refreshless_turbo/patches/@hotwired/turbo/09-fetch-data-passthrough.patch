@@ -1,0 +1,39 @@
+diff --git a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+index 884bcdd..83b213b 100644
+--- a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
++++ b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+@@ -810,6 +810,13 @@ Copyright © 2024 37signals LLC
+     abortController = new AbortController()
+     #resolveRequestPromise = (_value) => {}
+ 
++    /**
++     * RefreshLess data to pass from the request event to the response event.
++     *
++     * @type {Object}
++     */
++    #refreshlessData = {};
++
+     constructor(delegate, method, location, requestBody = new URLSearchParams(), target = null, enctype = FetchEnctype.urlEncoded) {
+       const [url, body] = buildResourceAndBody(expandURL(location), method, requestBody, enctype);
+ 
+@@ -885,6 +892,11 @@ Copyright © 2024 37signals LLC
+       const { fetchOptions } = this;
+       this.delegate.prepareRequest(this);
+       const event = await this.#allowRequestToBeIntercepted(fetchOptions);
++
++      if ('refreshless' in event.detail) {
++        this.#refreshlessData = event.detail.refreshless;
++      }
++
+       try {
+         this.delegate.requestStarted(this);
+ 
+@@ -912,7 +924,7 @@ Copyright © 2024 37signals LLC
+       const fetchResponse = new FetchResponse(response);
+       const event = dispatch("turbo:before-fetch-response", {
+         cancelable: true,
+-        detail: { fetchResponse },
++        detail: { fetchResponse, refreshless: this.#refreshlessData },
+         target: this.target
+       });
+       if (event.defaultPrevented) {

@@ -1,0 +1,15 @@
+bmc.setting_form:
+  path: '/admin/config/bmc-configuration'
+  defaults:
+    _form: Drupal\bmc\Form\BmcConfigurationForm
+    _title: 'Buy Me a Coffee configuration'
+  requirements:
+    _permission: 'administer bmc'
+
+bmc.help:
+  path: '/admin/help/bmc'
+  defaults:
+    _controller: '\Drupal\bmc\Controller\BmcHelpController::helpContent'
+    _title: 'Buy Me a Coffee Module Help'
+  requirements:
+    _permission: 'administer site configuration'

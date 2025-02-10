@@ -1,0 +1,3 @@
+administer bmc:
+  title: 'Administer bmc'
+  restrict access: true

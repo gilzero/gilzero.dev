@@ -1,0 +1,157 @@
+:root {
+
+  /**
+   * The progress bar filled area colour.
+   *
+   * Defaults to Drupal blue.
+   *
+   * @type {Color}
+   */
+  --refreshless-progress-bar-filled-colour: #0678be;
+
+  /**
+   * The progress bar empty area colour.
+   *
+   * Defaults to a darker shade of Drupal blue.
+   *
+   * @type {Color}
+   */
+  --refreshless-progress-bar-empty-colour: #034771;
+
+  /**
+   * The progress bar thickness.
+   *
+   * @type {Number}
+   */
+  --refreshless-progress-bar-thickness: 3px;
+
+  /**
+   * The progress bar z-index.
+   *
+   * Themes should override this to a more sensible value.
+   *
+   * @type {Number}
+   */
+  --refreshless-progress-bar-z-index: 2147483647;
+
+  /**
+   * The progress bar minimum/start value.
+   *
+   * This should be a percentage.
+   *
+   * @type {Number}
+   */
+  --refreshless-progress-bar-start: 10%;
+
+  /**
+   * Progress bar value transition.
+   */
+  --refreshless-progress-bar-value-transition: width var(
+    --refreshless-progress-bar-transition-duration
+  ) ease-out;
+
+  /**
+   * Progress bar opacity transition out.
+   */
+  --refreshless-progress-bar-opacity-transition-out:
+    opacity
+    calc(var(--refreshless-progress-bar-transition-duration) / 2)
+    calc(var(--refreshless-progress-bar-transition-duration) / 2)
+    ease-in;
+
+  /**
+   * Progress bar opacity transition in.
+   */
+  --refreshless-progress-bar-opacity-transition-in:
+    opacity
+    calc(var(--refreshless-progress-bar-transition-duration) / 2)
+    ease-in;
+
+  /**
+   * Progress bar computed value.
+   *
+   * Unlike --refreshless-progress-bar-value, which is a float between 0 and 1
+   * (inclusive), this is a percent, and it also takes
+   * --refreshless-progress-bar-start into account. This is intended to be used
+   * as the cleaned up and UI-ready value. The default implementation below uses
+   * this as the width of the filled area of the progress bar, but themes can
+   * use this however they choose.
+   */
+  --refreshless-progress-bar-computed-value: calc(
+    var(--refreshless-progress-bar-value, 0) * (
+      100% - var(--refreshless-progress-bar-start)
+    ) + var(--refreshless-progress-bar-start)
+  );
+
+}
+
+.refreshless-document-progress-bar {
+
+  position: fixed;
+
+  display: block;
+
+  top:  0;
+  left: 0;
+
+  height: var(--refreshless-progress-bar-thickness);
+
+  width: 100%;
+
+  z-index: var(--refreshless-progress-bar-z-index);
+
+  transition: var(--refreshless-progress-bar-opacity-transition-out);
+
+  opacity: 0;
+
+  background-color: var(--refreshless-progress-bar-empty-colour);
+
+}
+
+/* We're using ::before on the container rather than attempting to style and
+   transition the <progress> element's pseudo-elements because that's still a
+   bit unreliable even in 2024. (!!!) */
+.refreshless-document-progress-bar::before {
+
+  content: '';
+
+  display: block;
+
+  position: absolute;
+
+  top:    0;
+  bottom: 0;
+
+  /* We're using width because our calculated percent-based value seems to have
+     unexpected behaviour in Firefox/Gecko (December 2024) with transforms,
+     both scale and translate, where the progress bar will move forward a bit
+     and then back a bit before moving forward again. This may be due to Gecko
+     rounding the value in some way while Chromium/Blink does not appear to
+     exhibit this problem. Width seems performant enough on mobile even without
+     it being a GPU accelerated property, likely due to how simple the progress
+     bar is. */
+  width: var(--refreshless-progress-bar-computed-value);
+
+  background-color: var(--refreshless-progress-bar-filled-colour);
+
+  transition: var(--refreshless-progress-bar-value-transition);
+
+  will-change: opacity, width;
+
+}
+
+:root[dir=ltr] .refreshless-document-progress-bar::before {
+  left: 0;
+}
+
+:root[dir=rtl] .refreshless-document-progress-bar::before {
+  right: 0;
+}
+
+.refreshless-document-progress-bar--active {
+
+  opacity: 1;
+
+  transition: var(--refreshless-progress-bar-opacity-transition-in);
+
+}

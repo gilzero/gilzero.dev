@@ -1,0 +1,5 @@
+scrapingbot.settings:
+  title: "ScrapingBot Config"
+  description: "Setup ScrapingBot"
+  route_name: scrapingbot.settings
+  parent: system.admin_config_services

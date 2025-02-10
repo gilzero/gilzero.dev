@@ -1,0 +1,4 @@
+services:
+  artisan_styleguide.builder:
+    class: Drupal\artisan_styleguide\ArtisanStyleguideBuilder
+    arguments: ['@renderer', '@plugin.manager.sdc']

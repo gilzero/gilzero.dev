@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="git_info">
+  <description>Default PHP CodeSniffer configuration for git_info.</description>
+  <config name="installed_paths" value="../../drupal/coder/coder_sniffer/Drupal,../../drupal/coder/coder_sniffer/DrupalPractice,../../slevomat/coding-standard" />
+  <file>.</file>
+  <arg name="extensions" value="inc,install,module,php,profile,test,theme,yml"/>
+
+  <!--Ignore README markdown-->
+  <exclude-pattern>README\.md</exclude-pattern>
+  <exclude-pattern>CHANGELOG\.md</exclude-pattern>
+
+  <rule ref="Drupal"/>
+</ruleset>

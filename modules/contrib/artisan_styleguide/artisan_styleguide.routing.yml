@@ -1,0 +1,7 @@
+artisan_styleguide.preview:
+  path: '/artisan-styleguide'
+  defaults:
+    _title: 'Artisan Styleguide Preview'
+    _controller: '\Drupal\artisan_styleguide\Controller\ArtisanStyleguideController'
+  requirements:
+    _permission: 'administer themes'

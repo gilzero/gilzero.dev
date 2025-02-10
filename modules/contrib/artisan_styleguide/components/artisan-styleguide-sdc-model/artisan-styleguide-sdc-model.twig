@@ -1,0 +1,95 @@
+{% set attributes = attributes ?: create_attribute() %}
+{% set complementary_attributes = complementary_attributes ?: create_attribute() %}
+<!-- BEM CLASS NAMING. -->
+<!-- Bootstrap 5.3 utilities can be used, including those defined in theme. -->
+<!-- HTML5 tags can be used. -->
+<!-- Ensure AA accessibility at least. -->
+<!-- When component must be always used full width or edge to edge, it should
+use "container" class & section main html tag, do no use "container" class or
+"section" main html tag but "div", "article" or whatever needed in other cases. -->
+<section {{ attributes.addClass(['artisan-styleguide-sdc-model', 'bg-light']) }}>
+  <div {{ complementary_attributes.addClass(['artisan-styleguide-sdc-model__inner', 'container', 'py-3', 'd-flex', 'flex-column', 'gap-3']) }}>
+    <h2>Artisan Styleguide SDC Model</h2>
+    <h3>Properties</h3>
+    <div class="d-flex flex-wrap justify-content-stretch gap-3 mb-3">
+      <div class="artisan-styleguide-sdc-model__prop-string border p-4">
+        <h4>Prop string:</h4>
+        <div>{{ prop_string }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-uri border p-4">
+        <h4>Prop uri:</h4>
+        <div>{{ prop_uri }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-regex border p-4">
+        <h4>Prop regex:</h4>
+        <div>{{ prop_regex }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-boolean border p-4">
+        <h4>Prop boolean:</h4>
+        <div>{{ prop_boolean }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-integer border p-4">
+        <h4>Prop integer:</h4>
+        <div>{{ prop_integer }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-number border p-4">
+        <h4>Prop number:</h4>
+        <div>{{ prop_number }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-object border p-4">
+        <h4>Prop object:</h4>
+        <div>{{ prop_object.name }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-array-of-strings border p-4">
+        <h4>Prop array of strings:</h4>
+        <ul class="mb-0">
+          {% for item in prop_array_of_strings %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-array-of-objects border p-4">
+        <h4>Prop array of objects:</h4>
+        <ul class="mb-0">
+          {% for item in prop_array_of_objects %}
+            <li>{{ item.name }} - {{ item.surname }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-enum-of-strings border p-4">
+        <h4>Prop enum of strings:</h4>
+        <div>{{ prop_enum_of_strings }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-enum-of-numbers border p-4">
+        <h4>Prop enum of numbers:</h4>
+        <div>{{ prop_enum_of_numbers }}</div>
+      </div>
+      <div class="artisan-styleguide-sdc-model__prop-font-icon border p-4">
+        <h4>Prop font icon:</h4>
+        <div>
+          <!-- When VLSuite is installed this can be used: vlsuite_icon_font_icon(prop_font_icon) -->
+          {{ prop_font_icon }}
+        </div>
+      </div>
+    </div>
+    <h3>Slots</h3>
+    <div class="artisan-styleguide-sdc-model__slot-renderable-string-twig border p-4">
+      <h4>Complex renderable string twig</h4>
+      {% block slot_renderable_string_twig %}
+        {{ slot_renderable_string_twig }}
+      {% endblock %}
+    </div>
+    <div class="artisan-styleguide-sdc-model__slot-string-html border p-4">
+      <h4>Complex string html</h4>
+      {% block slot_string_html %}
+        {{ slot_string_html }}
+      {% endblock %}
+    </div>
+    <div class="artisan-styleguide-sdc-model__slot-renderable-array border p-4">
+      <h4>Complex rendrable array</h4>
+      {% block slot_renderable_array %}
+        {{ slot_renderable_array }}
+      {% endblock %}
+    </div>
+  </div>
+</section>

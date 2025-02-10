@@ -1,0 +1,13 @@
+name: ECA Push Framework
+type: module
+description: Integrates ECA with the Push Framework.
+package: Push
+core_version_requirement: ^10 || ^11
+dependencies:
+  - eca:eca (^2)
+  - push_framework:push_framework
+
+# Information added by Drupal.org packaging script on 2025-01-25
+version: '2.3.6'
+project: 'push_framework'
+datestamp: 1737802689

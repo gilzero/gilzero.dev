@@ -1,0 +1,22 @@
+{% set tooltip_title = tooltip_title|default('Help text'|t) %}
+{% set classes = [
+  title_display == 'after' ? 'option',
+  title_display == 'invisible' ? 'visually-hidden',
+  required ? 'js-form-required',
+  required ? 'form-required',
+  'fr-label',
+] %}
+{% if title is not empty or required -%}
+  <label{{ attributes.addClass(classes) }}>{{ title }}
+    {% if description.content %}
+      {% if description_tooltip %}
+        {{ include('dsfr4drupal:tooltip', {
+          'title': tooltip_title,
+          'tooltip': description.content,
+        }, with_context=false) }}
+      {% else %}
+        <span{{ description.attributes.addClass('fr-hint-text') }}>{{ description.content }}</span>
+      {% endif %}
+    {% endif %}
+  </label>
+{%- endif %}

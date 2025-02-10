@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Rebuild container for moving Ajax implementation to sub-module.
+ */
+function refreshless_update_10201(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
+
+/**
+ * Rebuild libraries for addition of progress bar components.
+ */
+function refreshless_update_10202(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Install Hux and rebuild container for named aggregation hooks in root module.
+ */
+function refreshless_update_10203(): void {
+
+  \Drupal::service('module_installer')->install(['hux']);
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
+
+/**
+ * Rebuild libraries for for switch to full SDC progress bar library use.
+ */
+function refreshless_update_10204(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}

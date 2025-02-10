@@ -1,0 +1,21 @@
+{% set attributes = attributes|default(create_attribute()) %}
+
+{% if variant %}
+  {% set attributes = attributes.addClass('fr-links-group-' ~ variant) %}
+{% endif %}
+
+{% if items|length > 1 %}
+  <ul{{ attributes.addClass('fr-links-group') }}>
+    {% for item in items %}
+      <li>
+        {{ include('dsfr4drupal:link', item, with_context=false) }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div{{ attributes.addClass('fr-links-group') }}>
+    {% for item in items %}
+      {{ include('dsfr4drupal:link', item, with_context=false) }}
+    {% endfor %}
+  </div>
+{% endif %}

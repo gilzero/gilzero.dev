@@ -1,0 +1,14 @@
+/**
+ * @file
+ * Fix tooltip styling.
+ */
+
+.fr-btn--tooltip {
+  /* Some chars are displaying when tooltip has value "content-box". */
+  box-sizing: border-box;
+}
+
+.fr-tooltip {
+  /* Fix font weight when is displayed in a bolded wrapper */
+  font-weight: normal;
+}

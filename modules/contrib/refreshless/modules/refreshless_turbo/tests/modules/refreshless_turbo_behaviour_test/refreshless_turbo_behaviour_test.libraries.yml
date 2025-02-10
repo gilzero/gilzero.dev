@@ -1,0 +1,8 @@
+behaviours:
+  js:
+    js/behaviours.js: {}
+  header: true
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once

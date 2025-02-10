@@ -1,0 +1,268 @@
+# Most of these set explicit aggregation groups which should not be changed or
+# removed as they're needed to ensure our JavaScript is aggregated separately
+# to avoid multiple evaluation. We also set preprocess: false on these by
+# default as a fallback if core doesn't support named aggregation groups. These
+# are automatically changed to preprocess: true if we detect support for named
+# aggregation groups.
+#
+# @see https://www.drupal.org/project/drupal/issues/3232810
+#   Core issue with a patch to enable setting explicit aggregation groups.
+#
+# @see https://www.drupal.org/project/refreshless/issues/3414538
+#   RefreshLess issue implementing JavaScript aggregation support.
+
+refreshless:
+  js:
+    js/refreshless.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - refreshless_turbo/announce
+    - refreshless_turbo/behaviours
+    - refreshless_turbo/drupal_settings
+    - refreshless_turbo/page_state
+    - refreshless_turbo/progress_bar
+    - refreshless_turbo/reload_check
+    - refreshless_turbo/reload_reason
+    - refreshless_turbo/script_manager
+    - refreshless_turbo/scroll
+    - refreshless_turbo/stylesheet_manager
+    - refreshless_turbo/turbo
+  drupalSettings:
+    refreshless:
+      # This is the name of the HTTP header that identifies RefreshLess
+      # requests. This is automatically populated during hook_js_settings_build
+      # if the value hasn't been changed from the default of null.
+      headerName: null
+
+ajax:
+  js:
+    js/compatibility/ajax.js: { attributes: { defer: true } }
+  header: true
+  # Do *not* add core/drupal.ajax as a dependency here as it'll cause a circular
+  # reference and result in out of memory errors during library discovery.
+  #
+  # @see \Drupal\refreshless_turbo\Hooks\Library
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+ajax_load_css:
+  js:
+    js/overrides/ajax_load_css.js: { attributes: { defer: true } }
+  header: true
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/loadjs
+
+announce:
+  js:
+    js/announce.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/drupal.announce
+    - core/jquery
+    - core/once
+
+behaviours:
+  js:
+    js/behaviours.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+
+dialog:
+  js:
+    js/compatibility/dialog.js: { attributes: { defer: true } }
+  header: true
+  dependencies:
+    - core/jquery
+    - core/once
+
+drupal_settings:
+  js:
+    js/drupal_settings.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+
+js-cookie:
+  remote: https://github.com/js-cookie/js-cookie
+  version: 3.0.5
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.5/LICENSE
+    gpl-compatible: true
+  js:
+    vendor/js-cookie/dist/js.cookie.js: {}
+
+page_state:
+  js:
+    js/page_state.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+    - core/once
+    - refreshless_turbo/js-cookie
+  drupalSettings:
+    refreshless:
+      # Page state cookie settings passed to the front-end. Several of these are
+      # automatically populated during hook_js_settings_build and can be altered
+      # in hook_js_settings_alter implementations as needed.
+      pageStateCookie:
+        # Cookie name. This placeholder is replaced with the value returned by
+        # \Drupal\refreshless_turbo\Value\RequestWithPageState::getCookieName()
+        # which should be treated as the canonical location of the name.
+        name: null
+        # Cookie attributes set when creating the cookie.
+        attributes:
+          # Path placeholder is automatically set to the base URL.
+          path:     null
+          sameSite: strict
+          secure:   true
+
+progress_bar:
+  js:
+    js/progress_bar.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/components.refreshless--progress-bar
+    - core/components.refreshless--progress-bar-delay
+    - core/jquery
+
+reload_check:
+  js:
+    js/reload_check.js:
+      # Explicitly set defer to false as this should be render blocking.
+      attributes: { defer: false }
+      # This is defined as a separate aggregation group to reduce the chance
+      # that a JavaScript error in something it's aggregated with could make
+      # the browser stop executing before it gets to this, which needs to
+      # detect that situation to force a full reload.
+      group:      refreshless-turbo-reload-check
+      preprocess: false
+  header: true
+
+reload_reason:
+  js:
+    js/reload_reason.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupalSettings
+    - core/jquery
+    - core/once
+    - refreshless_turbo/js-cookie
+  drupalSettings:
+    refreshless:
+      # Reload reason settings passed to the front-end. Several of these are
+      # automatically populated during hook_js_settings_build and can be altered
+      # in hook_js_settings_alter implementations as needed.
+      reloadReasonCookie:
+        # Cookie name. This placeholder is replaced with the value returned by
+        # \Drupal\refreshless_turbo\Value\ReloadRequest::getCookieName() which
+        # should be treated as the canonical location of the name.
+        name: null
+        # Cookie attributes set when creating the cookie.
+        attributes:
+          # Path placeholder is automatically set to the base URL.
+          path:     null
+          sameSite: strict
+          secure:   true
+
+script_manager:
+  js:
+    js/script_manager.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/jquery
+
+scroll:
+  css:
+    theme:
+      css/scroll.css: {}
+  js:
+    js/scroll.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+stylesheet_manager:
+  js:
+    js/stylesheet_manager.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+  drupalSettings:
+    refreshless:
+      # This is the name of the order attribute name added to stylesheet <link>
+      # elements. This is automatically populated during hook_js_settings_build
+      # if the value hasn't been changed from the default of null.
+      stylesheetOrderAttributeName: null
+
+turbo:
+  # The "-patchN" is to force downloading of a patched Turbo despite the
+  # official release version remaining the same. The "-patchN" number can be
+  # incremented if we apply another patch, or removed if a new Turbo version
+  # becomes available; whichever comes first.
+  version: 8.0.10-patch6
+  js:
+    vendor/@hotwired/turbo/dist/turbo.es2017-umd.js:
+      # Note that at the time of writing, Turbo does not cope well with being
+      # aggregated (and/or minified?), so the lack of a group here is
+      # intentional to prevent our hook picking this up and setting preprocess:
+      # true if core supports setting explicit aggregation groups.
+      #
+      # @see https://www.drupal.org/project/refreshless/issues/3414538
+      attributes: { defer: true }
+      preprocess: false
+  header: true
+  remote: https://turbo.hotwired.dev/
+  license:
+    name: MIT
+    url: https://github.com/hotwired/turbo/blob/main/MIT-LICENSE
+    gpl-compatible: true

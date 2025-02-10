@@ -1,0 +1,26 @@
+{
+  "name": "drupal/artisan_styleguide",
+  "type": "drupal-module",
+  "description": "Artisan Styleguide",
+  "homepage": "https://www.drupal.org/project/artisan_styleguide",
+  "authors": [
+    {
+      "name": "Alejandro Cabarcos",
+      "homepage": "https://www.drupal.org/u/alejandro-cabarcos",
+      "role": "Maintainer"
+    },
+    {
+      "name": "CRZDEV",
+      "homepage": "https://www.drupal.org/u/crzdev",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/3493340",
+    "source": "https://git.drupalcode.org/project/artisan_styleguide"
+  },
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "drupal/artisan": "^1.1"
+  }
+}

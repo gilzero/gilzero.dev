@@ -1,0 +1,13 @@
+name: Launch Checklist
+type: module
+description: Allows the documentation of pre-launch best practices.
+package: SEO
+core_version_requirement: ^9.3 || ^10 || ^11
+dependencies:
+  - drupal:checklistapi
+configure: checklistapi.checklists.launch_checklist
+
+# Information added by Drupal.org packaging script on 2025-01-30
+version: '1.1.13'
+project: 'launch_checklist'
+datestamp: 1738251494

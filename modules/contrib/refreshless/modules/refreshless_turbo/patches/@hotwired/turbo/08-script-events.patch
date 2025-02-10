@@ -1,0 +1,110 @@
+diff --git a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+index 05111a4..884bcdd 100644
+--- a/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
++++ b/modules/refreshless_turbo/vendor/@hotwired/turbo/dist/turbo.es2017-umd.js
+@@ -4673,9 +4673,29 @@ Copyright © 2024 37signals LLC
+     }
+ 
+     copyNewHeadScriptElements() {
++
++      const newScriptElements = [];
++
+       for (const element of this.newHeadScriptElements) {
+-        document.head.appendChild(activateScriptElement(element));
++        newScriptElements.push(activateScriptElement(element));
++      }
++
++      const beforeEvent = dispatch('turbo:before-scripts-merge', { detail: {
++        context: 'head',
++        old: this.oldHeadScriptElements,
++        new: newScriptElements,
++      } });
++
++      for (const element of beforeEvent.detail.new) {
++        document.head.appendChild(element);
+       }
++
++      dispatch('turbo:scripts-merged', { detail: {
++        context: 'head',
++        old: beforeEvent.detail.old,
++        new: beforeEvent.detail.new,
++      } });
++
+     }
+ 
+     removeUnusedDynamicStylesheetElements() {
+@@ -4751,10 +4771,50 @@ Copyright © 2024 37signals LLC
+     }
+ 
+     activateNewBodyScriptElements() {
+-      for (const inertScriptElement of this.newBodyScriptElements) {
+-        const activatedScriptElement = activateScriptElement(inertScriptElement);
+-        inertScriptElement.replaceWith(activatedScriptElement);
++
++      /**
++       * Activated <script> to inert <script> map.
++       *
++       * This is used to decide where to insert new <script> elements after
++       * letting event handlers alter them in the 'turbo:before-scripts-merge'
++       * event: if the element is in the map we build beforehand, it replaces
++       * its inert counterpart where it was found in the new <body>; if it isn't
++       * in the map, it will be appended to the end of the new <body>.
++       *
++       * @type {Map}
++       */
++      const activatedToInertMap = new Map();
++
++      for (const element of this.newBodyScriptElements) {
++        activatedToInertMap.set(activateScriptElement(element), element);
++      }
++
++      const beforeEvent = dispatch('turbo:before-scripts-merge', { detail: {
++        context: 'body',
++        old: this.oldBodyScriptElements,
++        new: Array.from(activatedToInertMap.keys()),
++      } });
++
++      for (const element of beforeEvent.detail.new) {
++
++        if (activatedToInertMap.has(element) === true) {
++
++          activatedToInertMap.get(element).replaceWith(element);
++
++        } else {
++
++          this.newElement.appendChild(element);
++
++        }
++
+       }
++
++      dispatch('turbo:scripts-merged', { detail: {
++        context: 'body',
++        old: beforeEvent.detail.old,
++        new: beforeEvent.detail.new,
++      } });
++
+     }
+ 
+     async assignNewBody() {
+@@ -4775,6 +4835,9 @@ Copyright © 2024 37signals LLC
+       return this.newHeadSnapshot.getStylesheetElementsNotInSnapshot(this.currentHeadSnapshot)
+     }
+ 
++    get oldHeadScriptElements() {
++      return this.currentHeadSnapshot.getScriptElementsNotInSnapshot(this.newHeadSnapshot)
++    }
+     get newHeadScriptElements() {
+       return this.newHeadSnapshot.getScriptElementsNotInSnapshot(this.currentHeadSnapshot)
+     }
+@@ -4787,6 +4850,10 @@ Copyright © 2024 37signals LLC
+       return this.newHeadSnapshot.provisionalElements
+     }
+ 
++    get oldBodyScriptElements() {
++      return document.body.querySelectorAll("script")
++    }
++
+     get newBodyScriptElements() {
+       return this.newElement.querySelectorAll("script")
+     }

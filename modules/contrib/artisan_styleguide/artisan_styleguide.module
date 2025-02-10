@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Main Artisan Styleguide module file.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function artisan_styleguide_theme() {
+  return [
+    'artisan_styleguide' => [
+      'variables' => [
+        'intro_notes' => [],
+        'components' => [],
+      ],
+    ],
+    'artisan_styleguide__component' => [
+      'variables' => [
+        'plugin_id' => '',
+        'name' => '',
+        'status' => FALSE,
+        'rendered' => '',
+        'component' => NULL,
+        'clarifications' => [],
+      ],
+    ],
+  ];
+}

@@ -1,0 +1,12 @@
+name: Link content parser
+type: module
+description: 'Module extracts the bits that humans care about from any URL you give it. That includes article content, titles, authors, published dates, excerpts, lead images, and more.'
+package: Field types
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - drupal:link
+
+# Information added by Drupal.org packaging script on 2024-03-15
+version: '1.0.1'
+project: 'postlight_parser'
+datestamp: 1710496967

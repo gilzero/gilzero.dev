@@ -1,0 +1,35 @@
+load: true
+rtl: false
+library: 'bootstrap'
+version: ''
+hide: false
+method: local
+build:
+  variant: true
+file_types:
+  js: 'bundle'
+  css: true
+  reboot: false
+  grid: false
+  utilities: false
+  theme: false
+  fonts: false
+  responsive: false
+theme_groups:
+  negate: 1
+  themes: ''
+request_path:
+  negate: 0
+  pages:
+    - '/admin*'
+    - '/imagebrowser*'
+    - '/img_assist*'
+    - '/imce*'
+    - '/node/add*'
+    - '/node/*/edit'
+    - '/user/*/edit'
+    - '/print/*'
+    - '/printpdf/*'
+    - '/system/ajax'
+    - '/system/ajax/*'
+    - '/batch*'

@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Enables the by me coffee widget.
+ */
+
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function bmc_page_attachments_alter(array &$attachments) {
+  $bmc_settings = \Drupal::service('config.factory')->get('bmc.settings')->get('bmc_settings');
+
+  // Get the current path.
+  $current_path = \Drupal::service('path.current')->getPath();
+
+  if (isset($bmc_settings['widget_visible'])  && $bmc_settings['widget_visible'] && !str_starts_with($current_path, '/admin')) {
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'script',
+        '#attributes' => [
+          'data-name' => 'BMC-Widget',
+          'data-cfasync' => 'false',
+          'src' => 'https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js',
+          'data-id' => $bmc_settings['username'] ?? '',
+          'data-description' => $bmc_settings['widget_description'] ?? 'Support me on Buy Me a Coffee!',
+          'data-message' => $bmc_settings['widget_message'] ?? 'Thank you for visiting. You can now buy me a coffee!',
+          'data-color' => $bmc_settings['widget_color'] ?? '#FF813F',
+          'data-position' => $bmc_settings['widget_align'] ?? 'Right',
+          'data-x_margin' => $bmc_settings['widget_side_spasing'] ?? '18',
+          'data-y_margin' => $bmc_settings['widget_bottom_spasing'] ?? '18',
+        ],
+      ],
+      'bmc_widget',
+    ];
+  }
+}

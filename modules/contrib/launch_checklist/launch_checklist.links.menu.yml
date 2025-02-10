@@ -1,0 +1,5 @@
+launch_checklist.admin:
+  title: Launch Checklist
+  description: Allows the documentation of pre-launch best practices.
+  route_name: checklistapi.checklists.launch_checklist
+  parent: system.admin_config_development

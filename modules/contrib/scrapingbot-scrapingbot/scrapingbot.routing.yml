@@ -1,0 +1,7 @@
+scrapingbot.settings:
+  path: '/admin/config/scraping_bot/settings'
+  defaults:
+    _form: '\Drupal\scrapingbot\Form\ScrapingBotConfigForm'
+    _title: 'Setup ScrapingBot'
+  requirements:
+    _permission: 'administer site configuration'

@@ -1,0 +1,16 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+name: RefreshLess progress bar delay
+description: Wraps the Refreshless progress bar to delay displaying until configured time has elapsed.
+props:
+  type: object
+  additionalProperties: false
+  properties: {}
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/jquery
+  js:
+    progress-bar-delay.js:
+      attributes: { defer: true }
+      group:      refreshless
+      preprocess: false

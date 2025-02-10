@@ -1,0 +1,15 @@
+name: RefreshLess - Turbo - Gin integration
+type: module
+description: RefreshLess Turbo integration for the <a href="https://www.drupal.org/project/gin">Gin administration theme</a>.
+package: User interface
+core_version_requirement: ^10.3 || ^11.0
+php: 8.1
+
+dependencies:
+  - hux:hux
+  - refreshless:refreshless_turbo
+
+# Information added by Drupal.org packaging script on 2025-01-28
+version: '2.0.0-alpha7'
+project: 'refreshless'
+datestamp: 1738108414

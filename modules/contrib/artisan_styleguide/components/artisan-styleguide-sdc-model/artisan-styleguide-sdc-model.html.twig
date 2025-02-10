@@ -1,0 +1,36 @@
+{# Template implementation example. #}
+{# Only mapped values should end up into sdc. #}
+{# May be helpful use twig filters of twig_field_value module. #}
+{# @see https://www.drupal.org/project/twig_field_value. #}
+{% embed 'artisan_styleguide:artisan-styleguide-sdc-model' with {
+  prop_string: not node.field_title.isEmpty() ? content.field_title|field_value : '',
+  prop_uri: not node.field_link.isEmpty() ? content.field_link|field_raw('uri') : '',
+  prop_regex: '^potato$',
+  prop_boolean: false,
+  prop_integer: 84,
+  prop_number: 99,
+  prop_object: { name: Uooo }
+  prop_array_of_strings: ['Demo1', 'Demo2'],
+  prop_array_of_objects: [{ name: Tetris, surname: BestGameEver }, { name: Potato, surname: BestDevPlaceholderEver }],
+  prop_enum_of_strings: 'One',
+  prop_enum_of_numbers: 8,
+  prop_font_icon: 'search',
+  attributes: attributes,
+  complementary_attributes: create_attribute(),
+  slot_renderable_string_twig: slot_renderable_string_twig,
+  slot_string_html: slot_string_html,
+  slot_renderable_array: slot_renderable_array,
+} only %}
+  {# Here can only be used mapped values (embed only). #}
+  {% block slot_renderable_string_twig %}
+    <div class="my-tunned-slot">
+      {{ slot_renderable_string_twig }}
+    </div>
+  {% endblock %}
+  {% block slot_string_html %}
+    {{ slot_string_html }}
+  {% endblock %}
+  {% block slot_renderable_array %}
+    {{ slot_renderable_array }}
+  {% endblock %}
+{% endembed %}

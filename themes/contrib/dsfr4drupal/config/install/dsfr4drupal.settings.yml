@@ -1,0 +1,25 @@
+favicon:
+  use_default: true
+features:
+  comment_user_picture: true
+  comment_user_verification: true
+  favicon: true
+  node_user_picture: false
+logo:
+  use_default: false
+logo_text: "République\r\nFrançaise"
+logo_operator: 0
+mourning_mode: false
+production: true
+verbose: false
+level: info
+scheme: light
+scheme_choose: false
+mega_menu: false
+container_class: fr-container
+form_novalidate: false
+form_description_tooltip: false
+footer_copy:
+  value: "<p>Unless otherwise stated, all text on this site is under <a href=\":url\" rel=\"nofollow noopener\" title=\"etalab-2.0 license - Open in new window\" target=\"_blank\">etalab-2.0 license</a>.</p>"
+  format: html_full
+show_password_button: false

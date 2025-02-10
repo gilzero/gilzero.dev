@@ -1,0 +1,10 @@
+field.formatter.settings.mdocviewer_field:
+  type: mapping
+  label: Micosoft Document Viewer Field Formatter settings
+  mapping:
+    width:
+      type: integer
+      label: Width
+    height:
+      type: integer
+      label: Height

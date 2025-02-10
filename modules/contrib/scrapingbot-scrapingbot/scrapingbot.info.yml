@@ -1,0 +1,14 @@
+name: ScrapingBot
+description: Fetches data from websites via ScrapingBot.
+package: AI Tools
+type: module
+core_version_requirement: ^10.3 || ^11
+configure: scrapingbot.settings
+
+dependencies:
+  - key:key
+
+# Information added by Drupal.org packaging script on 2025-01-02
+version: '1.0.0-beta1'
+project: 'scrapingbot'
+datestamp: 1735851602

@@ -1,0 +1,13 @@
+name: Unstructured
+description: Module for doing calls to Unstructured.io or self hosted.
+package: AI Tools
+type: module
+core_version_requirement: ^10.2 || ^11
+
+dependencies:
+  - key:key
+
+# Information added by Drupal.org packaging script on 2025-01-16
+version: '2.0.0-rc1'
+project: 'unstructured'
+datestamp: 1737042134

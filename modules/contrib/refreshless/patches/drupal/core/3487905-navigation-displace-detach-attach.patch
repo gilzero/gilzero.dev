@@ -1,0 +1,83 @@
+diff --git a/core/modules/navigation/js/admin-toolbar-wrapper.js b/core/modules/navigation/js/admin-toolbar-wrapper.js
+index 028e74ac7de..a523111a6c8 100644
+--- a/core/modules/navigation/js/admin-toolbar-wrapper.js
++++ b/core/modules/navigation/js/admin-toolbar-wrapper.js
+@@ -91,27 +91,60 @@
+ 
+               Drupal.displace(true);
+             });
++          }
++        }
++      },
++    };
+ 
+-            /**
+-             * Initialize Drupal.displace()
+-             *
+-             * We add the displace attribute to a separate full width element because we
+-             * don't want this element to have transitions. Note that this element and the
+-             * navbar share the same exact width.
+-             */
+-            const initDisplace = () => {
+-              const displaceElement = doc
+-                .querySelector('.admin-toolbar')
+-                ?.querySelector('.admin-toolbar__displace-placeholder');
+-              const edge =
+-                document.documentElement.dir === 'rtl' ? 'right' : 'left';
+-              displaceElement?.setAttribute(`data-offset-${edge}`, '');
+-              Drupal.displace(true);
+-            };
++    /**
++     * Initialize Drupal.displace()
++     *
++     * We add the displace attribute to a separate full width element because
++     * we don't want this element to have transitions. Note that this element
++     * and the navbar share the same exact width.
++     */
++    Drupal.behaviors.navigationDisplace = {
++      attach: (context) => {
+ 
+-            initDisplace();
+-          }
++        if (context !== document) {
++          return;
+         }
++
++        once('admin-toolbar-displace', context).forEach(() => {
++
++          const displaceElement = document.documentElement
++            .querySelector('.admin-toolbar')
++            ?.querySelector('.admin-toolbar__displace-placeholder');
++
++          const edge =
++            document.documentElement.dir === 'rtl' ? 'right' : 'left';
++
++          displaceElement?.setAttribute(`data-offset-${edge}`, '');
++
++          Drupal.displace(true);
++
++        });
++
++      },
++      detach: (context, settings, trigger) => {
++
++        if (trigger !== 'unload' || context !== document) {
++          return;
++        }
++
++        once.remove('admin-toolbar-displace', context).forEach(() => {
++
++          const displaceElement = document.documentElement
++            .querySelector('.admin-toolbar')
++            ?.querySelector('.admin-toolbar__displace-placeholder');
++
++          const edge =
++            document.documentElement.dir === 'rtl' ? 'right' : 'left';
++
++          displaceElement?.removeAttribute(`data-offset-${edge}`);
++
++        });
++
+       },
+     };
+ 

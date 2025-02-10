@@ -1,0 +1,7 @@
+services:
+  scrapingbot.api:
+    class: Drupal\scrapingbot\ScrapingBot
+    arguments: ['@http_client', '@config.factory', '@key.repository']
+  scrapingbot.crawler_helper:
+    class: Drupal\scrapingbot\CrawlerHelper
+    arguments: ['@entity_type.manager']

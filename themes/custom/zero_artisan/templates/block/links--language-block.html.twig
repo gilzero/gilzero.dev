@@ -1,0 +1,7 @@
+{% if links %}
+  {% embed 'zero_artisan:dropdown' with {
+    toggle: current_language_name,
+    items: links,
+  } only %}
+  {% endembed %}
+{% endif %}

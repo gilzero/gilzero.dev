@@ -1,0 +1,11 @@
+name: 'Bootstrap UI'
+description: 'Integrates Bootstrap CSS framework along with a user interface for configuring and customize components, variables and plugins.'
+type: module
+package: Bootstrap
+core_version_requirement: ^8.8 || ^9 || ^10 || ^11
+configure: bootstrap.settings
+
+# Information added by Drupal.org packaging script on 2024-06-15
+version: '1.0.1'
+project: 'bootstrap_ui'
+datestamp: 1718449001

@@ -1,0 +1,15 @@
+{
+    "name": "drupal/scrapingbot",
+    "authors": [
+        {
+            "name": "Marcus Johansson",
+            "email": "me@marcusmailbox.com"
+        }
+    ],
+    "license": "GPL-2.0-or-later",
+    "type": "drupal-module",
+    "require": {
+        "ivan_boring/readability.php": "^1.0.0",
+        "drupal/key": "^1.18"
+    }
+}

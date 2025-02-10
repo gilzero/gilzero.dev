@@ -1,0 +1,386 @@
+<?php
+
+declare(strict_types=1);
+
+use Composer\Semver\Semver;
+
+/**
+ * Implements \hook_requirements().
+ */
+function refreshless_turbo_requirements(string $phase): array {
+
+  $requirements = [];
+
+  /** @var \Drupal\Core\StringTranslation\TranslatableMarkup */
+  $title = \t('RefreshLess - Turbo');
+
+  /** @var string Turbo package.json path relative to this file. */
+  $packagePath = __DIR__ . '/vendor/@hotwired/turbo/package.json';
+
+  /** @var string The version constraint from our own package.json. */
+  $requiredConstraint = \json_decode(\file_get_contents(\realpath(
+    __DIR__ . '/package.json',
+  )), true)['dependencies']['@hotwired/turbo'];
+
+  if (\in_array($phase, ['install', 'runtime'])) {
+
+    // This both normalizes the path separators (i.e. Windows) and checks if the
+    // file exists because \realpath() will return false if the file does not
+    // exist and a normalized file path string if it does.
+    if (\realpath($packagePath) === false) {
+
+      $requirements['refreshless_turbo'] = [
+        'title'     => $title,
+        'severity'  => REQUIREMENT_ERROR,
+      ];
+
+      if ($phase === 'install') {
+
+        $requirements['refreshless_turbo']['description'] = \t(
+          'Unable to find the Hotwire Turbo library; it must be installed via a package manager such as Yarn. Please follow the instructions for this module before attempting to install it.',
+        );
+
+      }
+
+      if ($phase === 'runtime') {
+
+        $requirements['refreshless_turbo']['description'] = \t(
+          'Unable to find the Hotwire Turbo library; it must be installed via a package manager such as Yarn. Please follow the instructions for this module.',
+        );
+
+      }
+
+      return $requirements;
+
+    }
+
+  }
+
+  if ($phase === 'runtime') {
+
+    /** @var string|false */
+    $packageContents = \file_get_contents($packagePath);
+
+    if ($packageContents === false) {
+
+      $requirements['refreshless_turbo'] = [
+        'title'       => $title,
+        'description' => \t(
+          'Unable to read the Hotwire Turbo library version; it may not have been installed correctly. Please see the instructions for this module.',
+        ),
+        'severity'    => REQUIREMENT_WARNING,
+      ];
+
+      return $requirements;
+
+    }
+
+    /** @var array|null */
+    $packageParsed = \json_decode($packageContents, true);
+
+    if (
+      !\is_array($packageParsed) ||
+      !\array_key_exists('version', $packageParsed)
+    ) {
+
+      $requirements['refreshless_turbo'] = [
+        'title'       => $title,
+        'description' => \t(
+          'Unable to read the Hotwire Turbo library version; it may not have been installed correctly. Please see the instructions for this module.',
+        ),
+        'severity'    => REQUIREMENT_WARNING,
+      ];
+
+      return $requirements;
+
+    }
+
+    if (!Semver::satisfies($packageParsed['version'], $requiredConstraint)) {
+
+      $requirements['refreshless_turbo'] = [
+        'title'       => $title,
+        'value'       => $packageParsed['version'],
+        'description' => \t(
+          'Hotwire Turbo library is installed correctly but an unexpected version found; we support <code>@constraint</code>',
+          ['@constraint' => $requiredConstraint],
+        ),
+        'severity'    => REQUIREMENT_WARNING,
+      ];
+
+      return $requirements;
+
+    }
+
+    $requirements['refreshless_turbo'] = [
+      'title'       => $title,
+      'value'       => $packageParsed['version'],
+      'description' => \t(
+        'Hotwire Turbo library is installed correctly and within expected version range (<code>@constraint</code>).',
+        ['@constraint' => $requiredConstraint],
+      ),
+      'severity'    => REQUIREMENT_OK,
+    ];
+
+  }
+
+  return $requirements;
+
+}
+
+/**
+ * Implements \hook_install().
+ *
+ * Rebuilds library definitions so that our changes take effect when
+ * aggregation is on.
+ *
+ * Installs the 'refreshless_turbo_gin' module if Gin is set as the
+ * administration theme.
+ */
+function refreshless_turbo_install(bool $isSyncing): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+  if (\Drupal::config('system.theme')->get('admin') === 'gin') {
+
+    \Drupal::service('module_installer')->install(['refreshless_turbo_gin']);
+
+    \Drupal::service('messenger')->addStatus(\t(
+      'RefreshLess: installed the Gin integration sub-module.',
+    ));
+
+  }
+
+}
+
+/**
+ * Rebuild library definitions for Turbo 8.0.2 to 8.0.3 upgrade.
+ */
+function refreshless_turbo_update_10201(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild container and library definitions for various aggregation fixes.
+ */
+function refreshless_turbo_update_10202(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild libraries for Firefox scroll fixes, stylesheet sorter, Turbo 8.0.10.
+ */
+function refreshless_turbo_update_10203(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild container and library definitions for JavaScript aggregation.
+ */
+function refreshless_turbo_update_10204(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Invalidate cached rendered markup for new aggregation <meta> elements.
+ */
+function refreshless_turbo_update_10205(): void {
+
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['rendered']);
+
+}
+
+/**
+ * Rebuild container, libraries, and rendered output for js/reload.js addition.
+ */
+function refreshless_turbo_update_10206(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['rendered']);
+
+}
+
+/**
+ * Rebuild container for switch to autowiring.
+ */
+function refreshless_turbo_update_10207(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
+
+/**
+ * Rebuild container to pick up decorated messenger service.
+ */
+function refreshless_turbo_update_10208(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
+
+/**
+ * Rebuild container for page attachments hook constructor parameter changes.
+ */
+function refreshless_turbo_update_10209(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
+
+/**
+ * Rebuild container and libraries for js/overrides/announce.js addition.
+ */
+function refreshless_turbo_update_10210(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild container, libraries, rendered output for kill switch addition.
+ */
+function refreshless_turbo_update_10211(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+  \Drupal::service('cache_tags.invalidator')->invalidateTags(['rendered']);
+
+}
+
+/**
+ * Rebuild libraries for addition of Ajax add CSS command override.
+ */
+function refreshless_turbo_update_10212(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild libraries for addition of Gin navigation sidebar transition fix.
+ */
+function refreshless_turbo_update_10213(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild libraries for Turbo data-turbo-track="dynamic" render delay patch.
+ */
+function refreshless_turbo_update_10214(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild container for kill switch middleware addition.
+ */
+function refreshless_turbo_update_10215(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
+
+/**
+ * Rebuild container, install new Gin integration module, and rebuild libraries.
+ */
+function refreshless_turbo_update_10216(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('module_installer')->install(['refreshless_turbo_gin']);
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild libraries for progress bar delay back/forward fix.
+ */
+function refreshless_turbo_update_10217(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Install the base RefreshLess module if not installed for progress bar.
+ */
+function refreshless_turbo_update_10218(): void {
+
+  \Drupal::service('module_installer')->install(['refreshless']);
+
+}
+
+/**
+ * Rebuild libraries for Turbo stylesheet events and Drupal.announce() calls.
+ */
+function refreshless_turbo_update_10219(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild libraries for Turbo patch to allow POST submit without redirect.
+ */
+function refreshless_turbo_update_10220(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild container and libraries for page state and js-cookie library changes.
+ */
+function refreshless_turbo_update_10221(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild container and libraries for 2.0.2-alpha5 to 2.0.0-alpha6 changes.
+ */
+function refreshless_turbo_update_10222(): void {
+
+  // This includes a large number of library changes, moves/renames, various
+  // drupalSettings optimizations, and incrementing the Turbo patch query
+  // string.
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}
+
+/**
+ * Rebuild libraries for 2.0.0-alpha6 to 2.0.0-alpha7 changes.
+ */
+function refreshless_turbo_update_10223(): void {
+
+  \Drupal::service('library.discovery')->clearCachedDefinitions();
+
+}

@@ -1,0 +1,17 @@
+{% set attributes = attributes|default(create_attribute()) %}
+
+{% if items|length > 1 %}
+  <ul{{ attributes.addClass('fr-tags-group') }}>
+    {% for item in items %}
+      <li>
+        {{ include('dsfr4drupal:tag', item, with_context=false) }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div{{ attributes.addClass('fr-tags-group') }}>
+    {% for item in items %}
+      {{ include('dsfr4drupal:tag', item, with_context=false) }}
+    {% endfor %}
+  </div>
+{% endif %}

@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * @file
+ * Install, uninstall and update functions for the Bootstrap UI module.
+ */
+
+use Drupal\Core\Url;
+
+define('BOOTSTRAP_UI_DOWNLOAD_URL', 'https://github.com/twbs/bootstrap/tags');
+
+/**
+ * Implements hook_requirements().
+ */
+function bootstrap_ui_requirements($phase) {
+  $requirements = [];
+
+  if ($phase != 'runtime') {
+    return $requirements;
+  }
+
+  // Get Bootstrap settings.
+  $bootstrap_config = \Drupal::configFactory()->get('bootstrap_ui.settings');
+  $bootstrap_exists = bootstrap_ui_check_installed();
+
+  // Check if the user has suppressed the warning in Bootstrap UI settings.
+  $hide_warning = $bootstrap_config->get('hide');
+
+  // Get using Bootstrap version.
+  $version = $bootstrap_exists ? bootstrap_ui_detect_version() : $bootstrap_config->get('version');
+
+  // Show the status of the library in the status report section.
+  if ($bootstrap_exists) {
+    $description = t('The Bootstrap library was available in the correct local libraries path and enabled.');
+  }
+  else {
+    $description = t('The Bootstrap library is using <strong>CDN</strong> and is not installed in your local libraries.<br>You can <a href="@downloadUrl" rel="external" target="_blank">download</a> and extract to "/libraries/bootstrap" then check file exists in your Drupal installation directory at the correct path "/libraries/bootstrap/css/bootstrap.min.css".<br>See the Bootstrap UI module README file for more details.', [
+      '@downloadUrl' => BOOTSTRAP_UI_DOWNLOAD_URL,
+    ]);
+    // Returns TRUE for the library if the library
+    // warning was hidden when using the CDN method.
+    if ($hide_warning) {
+      $bootstrap_exists = 'cdn';
+    }
+  }
+
+  // Prepares library requirements status
+  // if load library is already enabled.
+  if ($bootstrap_config->get('load')) {
+    $assets = $bootstrap_exists == 'dist' ? t('Distribution') : t('Source code');
+    $status = $bootstrap_exists ? (
+    $bootstrap_exists == 'cdn' ?
+      t(
+        'Not installed <em>(CDN - Version @version)</em>',
+        ['@version' => $version]
+      ) :
+      t(
+        'Installed <em>(Version @version %assets)</em>',
+        [
+          '@version' => $version,
+          '%assets' => $assets,
+        ]
+      )
+    ) : t('Not installed');
+    $requirements['bootstrap'] = [
+      'title'       => t('Bootstrap library'),
+      'value'       => $status,
+      'severity'    => $bootstrap_exists ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+      'description' => $description,
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function bootstrap_ui_install() {
+  // Check for Bootstrap framework installation.
+  $bootstrap_exists = bootstrap_ui_check_installed();
+  if ($bootstrap_exists === FALSE) {
+    \Drupal::messenger()->addWarning(
+      t('The <em>Bootstrap UI</em> module requires the Bootstrap CSS framework.<br>
+               Currently, the Bootstrap library is loaded via <strong>CDN</strong> and is not available in your local libraries.<br>
+               Please <a href=":downloadUrl" rel="external" target="_blank">Download</a> the desired version and unzip into <strong>/libraries/bootstrap</strong> directory.',
+        [
+          ':downloadUrl' => BOOTSTRAP_UI_DOWNLOAD_URL,
+        ]
+      )
+    );
+  }
+  // Add Bootstrap settings link status.
+  \Drupal::messenger()->addStatus(t('Thanks for installing Bootstrap UI module.<br>Check Bootstrap <a href=":settings">global settings</a> for more configuration.', [
+    ':settings' => Url::fromRoute('bootstrap.settings')->toString(),
+  ]));
+}

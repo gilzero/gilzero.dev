@@ -1,0 +1,77 @@
+bootstrap_ui.settings:
+  type: config_object
+  label: 'Bootstrap settings'
+  mapping:
+    load:
+      type: boolean
+      label: 'Let module handle loading Bootstrap framework'
+    rtl:
+      type: boolean
+      label: 'RTL support'
+    hide:
+      type: boolean
+      label: 'Hide warning'
+    library:
+      type: string
+      label: 'Bootstrap library'
+    version:
+      type: string
+      label: 'Library version'
+    method:
+      type: string
+      label: 'Loading method'
+    build:
+      type: mapping
+      label: 'Build variant'
+      mapping:
+        variant:
+          type: integer
+          label: 'Variant'
+    file_types:
+      type: mapping
+      label: 'File usability'
+      mapping:
+        js:
+          type: string
+          label: 'Bootstrap JS / Bundle'
+        css:
+          type: boolean
+          label: 'Bootstrap CSS'
+        reboot:
+          type: boolean
+          label: 'Bootstrap 4, 5 Reboot CSS'
+        grid:
+          type: boolean
+          label: 'Bootstrap 4, 5 Grid CSS'
+        utilities:
+          type: boolean
+          label: 'Bootstrap 5 Utilities CSS'
+        theme:
+          type: boolean
+          label: 'Bootstrap 3 Theme CSS'
+        fonts:
+          type: boolean
+          label: 'Bootstrap 3 Glyphicons Font'
+        responsive:
+          type: boolean
+          label: 'Bootstrap 2 Responsive'
+    theme_groups:
+      type: mapping
+      label: 'Theme usability'
+      mapping:
+        negate:
+          type: integer
+          label: 'Negate'
+        themes:
+          type: array
+          label: 'Themes'
+    request_path:
+      type: mapping
+      label: 'URL usability'
+      mapping:
+        negate:
+          type: integer
+          label: 'Negate'
+        pages:
+          type: array
+          label: 'Pages'

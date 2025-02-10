@@ -1,0 +1,25 @@
+{
+    "name": "drupal/listjs",
+    "description": "Search, sort, filter HTML lists using listjs library",
+    "type": "drupal-module",
+    "homepage": "https://www.drupal.org/project/listjs",
+    "support": {
+        "issues": "https://github.com/subhojit777/listjs/issues",
+        "irc": "irc://irc.freenode.org/drupal-contribute",
+        "source": "https://github.com/subhojit777/listjs"
+    },
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Subhojit Paul",
+            "email": "subhojitpaul21@gmail.com",
+            "homepage": "http://subhojit777.in",
+            "role": "Maintainer"
+        }
+    ],
+    "suggest": {
+      "bower-asset/listjs": "Required for the project, please enable composer third party libraries via https://www.drupal.org/docs/develop/using-composer/manage-dependencies#third-party-libraries or manually download "
+  }
+
+}

@@ -1,0 +1,8 @@
+# Ignore vendor files we don't intend to use. Note that the readmes and licenses
+# must be kept intact, so they should not be ignored.
+/vendor/@hotwired/turbo/dist/turbo.es2017-esm.js
+/vendor/js-cookie/dist/js.cookie.min.mjs
+/vendor/js-cookie/dist/js.cookie.mjs
+/vendor/js-cookie/index.js
+/vendor/entrypoints.json
+/vendor/manifest.json

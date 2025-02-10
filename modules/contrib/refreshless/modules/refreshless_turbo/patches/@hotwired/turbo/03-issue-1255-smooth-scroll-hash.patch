@@ -1,0 +1,17 @@
+diff --git a/dist/turbo.es2017-umd.js b/dist/turbo.es2017-umd.js
+index 142dd2c1fd322e1d123415a5760cb8096d65eb28..8e0fb2aed4106eb31ddeb77eb5c4b8021beb71ed 100644
+--- a/dist/turbo.es2017-umd.js
++++ b/dist/turbo.es2017-umd.js
+@@ -1451,10 +1451,10 @@ Copyright © 2024 37signals LLC
+     focusElement(element) {
+       if (element instanceof HTMLElement) {
+         if (element.hasAttribute("tabindex")) {
+-          element.focus();
++          element.focus({preventScroll: true});
+         } else {
+           element.setAttribute("tabindex", "-1");
+-          element.focus();
++          element.focus({preventScroll: true});
+           element.removeAttribute("tabindex");
+         }
+       }

@@ -1,0 +1,28 @@
+hide_submit:
+  version: 1.x
+  js:
+    js/hide_submit.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery
+    - core/once
+
+spin:
+  version: 1.x
+  js:
+    js/spin.min.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+ladda:
+  version: 1.x
+  js:
+    js/ladda.min.js: {}
+  css:
+    theme:
+      css/ladda-themeless.min.css: {}
+  dependencies:
+    - core/drupal

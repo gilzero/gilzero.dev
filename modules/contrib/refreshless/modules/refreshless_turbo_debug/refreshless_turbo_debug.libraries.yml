@@ -1,0 +1,11 @@
+debug:
+  js:
+    js/debug.js:
+      attributes: { defer: true }
+      group:      refreshless-turbo
+      preprocess: false
+  header: true
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once

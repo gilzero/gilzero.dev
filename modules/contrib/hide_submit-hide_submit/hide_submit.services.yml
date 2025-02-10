@@ -1,0 +1,6 @@
+services:
+  hide_submit.form_alter:
+    class: 'Drupal\hide_submit\Service\HideSubmitFormAlter'
+    arguments: ['@current_user', '@config.factory', '@string_translation']
+    tags:
+      - { name: 'form_alter' }

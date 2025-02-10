@@ -1,0 +1,66 @@
+services:
+
+  _defaults:
+    autowire: true
+
+  cache_context.refreshless_turbo_enabled:
+    class: Drupal\refreshless_turbo\Cache\Context\RefreshlessTurboEnabledCacheContext
+    tags:
+      - { name: cache.context }
+
+  cache_context.refreshless_turbo_request:
+    class: Drupal\refreshless_turbo\Cache\Context\RefreshlessTurboRequestCacheContext
+    tags:
+      - { name: cache.context }
+
+  http_middleware.refreshless_turbo.additive_libraries:
+    class: Drupal\refreshless_turbo\StackMiddleware\AdditiveLibraries
+    tags:
+      # Note the priority must be lower than http_middleware.ajax_page_state
+      # which has priority of 500.
+      - { name: http_middleware, priority: 499 }
+
+  http_middleware.refreshless_turbo.refreshless_kill_switch:
+    class: Drupal\refreshless_turbo\StackMiddleware\RefreshlessKillSwitch
+    tags:
+      # Note that this priority must be lower than
+      # http_middleware.refreshless_turbo.additive_libraries.
+      - { name: http_middleware, priority: 490 }
+
+  refreshless_turbo.asset.resolver:
+    class: Drupal\refreshless_turbo\Service\AssetResolver
+    decorates: asset.resolver
+    public: false
+
+  refreshless_turbo.kill_switch:
+    class: Drupal\refreshless_turbo\Service\RefreshlessTurboKillSwitch
+
+  Drupal\refreshless_turbo\Service\RefreshlessTurboKillSwitchInterface: '@refreshless_turbo.kill_switch'
+
+  refreshless_turbo.messenger:
+    class: Drupal\refreshless_turbo\Service\Messenger
+    decorates: messenger
+    public: false
+
+  refreshless_turbo.page_cache_request_policy.additive_libraries:
+    class: Drupal\refreshless_turbo\PageCache\AdditiveLibrariesRequestPolicy
+    tags:
+      - { name: page_cache_request_policy }
+
+  refreshless_turbo.refreshless_context:
+    class: Drupal\refreshless_turbo\Service\RefreshlessTurboContext
+
+  Drupal\refreshless_turbo\Service\RefreshlessTurboContextInterface: '@refreshless_turbo.refreshless_context'
+
+  # Secondary flash message bag needed for our decorated messenger service.
+  session.refreshless_turbo_secondary_flash_bag:
+    class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
+    arguments:
+      - '_refreshless_turbo_secondary_flash_bag'
+    calls:
+      # We need to specify a different name than the default ('flashes') so that
+      # this doesn't replace the default Symfony flash message bag when
+      # initialized on the session.
+      - [setName, ['refreshless_turbo_secondary_flash_bag']]
+    tags:
+      - { name: session_bag }

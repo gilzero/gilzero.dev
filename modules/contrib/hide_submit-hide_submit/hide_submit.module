@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function hide_submit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::service('hide_submit.form_alter')->alterForm($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function hide_submit_library_info_build() {
+  $libraries['hide_submit'] = [
+    'version' => '1.x',
+    'js' => [
+      'js/hide_submit.js' => [],
+    ],
+    'dependencies' => [
+      'core/jquery',
+    ],
+  ];
+  return $libraries;
+}

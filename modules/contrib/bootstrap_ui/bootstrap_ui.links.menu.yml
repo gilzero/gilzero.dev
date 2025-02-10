@@ -1,0 +1,5 @@
+bootstrap.settings:
+  title: 'Bootstrap UI'
+  description: 'Global settings and customize Bootstrap framework.'
+  parent: system.admin_config_ui
+  route_name: bootstrap.settings

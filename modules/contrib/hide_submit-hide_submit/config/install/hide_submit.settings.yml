@@ -1,0 +1,11 @@
+hide_submit_method: 'disable'
+hide_submit_css: ''
+hide_submit_abtext: ''
+hide_submit_atext: ''
+hide_submit_hide_css: ''
+hide_submit_hide_text: 'Processing...'
+hide_submit_hide_fx: FALSE
+hide_submit_reset_time: 5000
+hide_submit_indicator_style: 'expand-left'
+hide_submit_spinner_color: '#000'
+hide_submit_spinner_lines: 12

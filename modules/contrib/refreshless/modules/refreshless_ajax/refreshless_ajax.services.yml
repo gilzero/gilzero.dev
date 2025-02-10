@@ -1,0 +1,38 @@
+services:
+
+  main_content_renderer.refreshless:
+    class: Drupal\refreshless_ajax\Render\MainContent\RefreshlessRenderer
+    arguments:
+      - '@csrf_token'
+      - '@html_response.attachments_processor'
+      - '@main_content_renderer.html'
+      - '@refreshless_ajax.page_state'
+      - '@render_cache'
+      - '@renderer'
+      - '@theme_handler'
+      - '@theme.manager'
+    tags:
+      - { name: render.main_content_renderer, format: drupal_refreshless }
+
+  refreshless.html_response.subscriber:
+    class: Drupal\refreshless_ajax\EventSubscriber\HtmlResponseSubscriber
+    arguments:
+      - '@refreshless_ajax.page_state'
+    tags:
+      - { name: event_subscriber }
+
+  refreshless.page_display_variant_subscriber.block:
+    class: Drupal\refreshless_ajax\EventSubscriber\BlockPageDisplayVariantSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  refreshless_ajax.page_state:
+    class: Drupal\refreshless_ajax\RefreshlessPageState
+    arguments:
+      - '@cache_contexts_manager'
+      - '@csrf_token'
+
+  refreshless.redirect_response_subscriber:
+    class: Drupal\refreshless_ajax\EventSubscriber\RedirectResponseSubscriber
+    tags:
+      - { name: event_subscriber }

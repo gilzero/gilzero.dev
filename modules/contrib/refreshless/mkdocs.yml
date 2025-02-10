@@ -1,0 +1,55 @@
+site_name: 'RefreshLess'
+repo_url: https://git.drupalcode.org/project/refreshless
+repo_name: drupal/refreshless
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      primary: grey
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      primary: grey
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: grey
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+markdown_extensions:
+  - def_list
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+nav:
+  - Home: 'index.md'
+  - User guide:
+    - Installing: 'user/install.md'
+  - Integrating:
+      - Behaviours: 'integrating/behaviours.md'
+      - Events: 'integrating/events.md'
+      - API: 'integrating/api.md'
+  - Developing:
+      - Getting started: 'developing/start.md'
+  - About:
+    - Motivation: 'about/motivation.md'
+plugins:
+  - search
+  - privacy:
+      enabled: !ENV [CI, false]

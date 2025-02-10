@@ -1,0 +1,6 @@
+events:
+  js:
+    js/events.js: {}
+  dependencies:
+    - core/jquery
+    - core/once

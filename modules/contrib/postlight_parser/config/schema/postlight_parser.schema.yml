@@ -1,0 +1,25 @@
+field.widget.settings.postlight_parser:
+  type: mapping
+  label: Postlight Parser widget settings
+  mapping:
+    title_field:
+      type: string
+      label: Title field
+    content_field:
+      type: string
+      label: Content field
+    image_field:
+      type: string
+      label: Image field
+    excerpt_field:
+      type: string
+      label: Summary field
+    parser:
+      type: string
+      label: Parser library
+    endpoint:
+      type: string
+      label: Endpoint api
+    save_image:
+      type: boolean
+      label: Save image inline

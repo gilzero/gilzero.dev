@@ -1,0 +1,15 @@
+output:
+  js:
+    js/output.js:
+      attributes: { data-refreshless-turbo-script-manager-test-remove: true }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+
+remover:
+  js:
+    js/remover.js: {}
+  dependencies:
+    - core/jquery
+    - core/once

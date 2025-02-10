@@ -1,0 +1,14 @@
+{
+    "name": "drupal/launch_checklist",
+    "type": "drupal-module",
+    "description": "Allows the documentation of pre-launch best practices.",
+    "homepage": "https://www.drupal.org/project/launch_checklist",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/checklistapi": "^2.0"
+    },
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/launch_checklist",
+        "source": "http://drupalcode.org/launch_checklist"
+    }
+}

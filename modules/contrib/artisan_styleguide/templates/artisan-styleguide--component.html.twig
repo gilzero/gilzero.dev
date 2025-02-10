@@ -1,0 +1,26 @@
+<div class="my-4" data-component-id="{{ plugin_id }}">
+  {% if status %}
+    <div class="container" data-component-title>
+      <h3 class="text-success border-bottom border-success mb-3">{{ name }} - {{ plugin_id }} - OK</h3>
+    </div>
+    <div class="shadow" data-component-preview>
+      {{ rendered is not empty ? component : rendered }}
+    </div>
+  {% else %}
+    <div class="container" data-component-title>
+      <h3 class="text-danger border-bottom border-danger mb-3">{{ name }} - {{ plugin_id }} - KO</h3>
+    </div>
+    <div class="shadow" data-component-preview>
+      {{ rendered is not empty ? component : rendered }}
+    </div>
+  {% endif %}
+  {% if clarifications is not empty %}
+    <div class="container shadow mt-3 p-3" data-component-clarifications>
+      <ul class="m-0">
+      {% for clarification in clarifications %}
+        <li>{{ clarification }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,29 @@
+refreshless_turbo_script_manager_test.remover_only:
+  path: '/refreshless_turbo_script_manager_test/remover_only'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_script_manager_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo script manager test remover only'
+    libraries: ['remover']
+    linkToRoute: 'refreshless_turbo_script_manager_test.both'
+
+refreshless_turbo_script_manager_test.both:
+  path: '/refreshless_turbo_script_manager_test/both'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_script_manager_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo script manager test both'
+    libraries: ['output', 'remover']
+    linkToRoute: 'refreshless_turbo_script_manager_test.remover_only'
+
+refreshless_turbo_script_manager_test.output_only:
+  path: '/refreshless_turbo_script_manager_test/output_only'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_script_manager_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo script manager test output only'
+    libraries: ['output']
+    linkToRoute: 'refreshless_turbo_script_manager_test.remover_only'

@@ -1,0 +1,12 @@
+name: Buy Me a Coffee
+description: Buy Me a Coffee module
+type: module
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:block
+configure: bmc.setting_form
+
+# Information added by Drupal.org packaging script on 2025-01-17
+version: '1.0.9'
+project: 'bmc'
+datestamp: 1737115024

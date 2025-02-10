@@ -1,0 +1,49 @@
+refreshless_turbo_stylesheet_test.one:
+  path: '/refreshless_turbo_stylesheet_test/one'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_stylesheet_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo stylesheet test one'
+    library: 'one'
+    linkToRoute: 'refreshless_turbo_stylesheet_test.two'
+
+refreshless_turbo_stylesheet_test.two:
+  path: '/refreshless_turbo_stylesheet_test/two'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_stylesheet_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo stylesheet test two'
+    library: 'two'
+    linkToRoute: 'refreshless_turbo_stylesheet_test.three'
+
+refreshless_turbo_stylesheet_test.three:
+  path: '/refreshless_turbo_stylesheet_test/three'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_stylesheet_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo stylesheet test three'
+    library: 'three'
+    linkToRoute: 'refreshless_turbo_stylesheet_test.one'
+
+refreshless_turbo_stylesheet_test.four:
+  path: '/refreshless_turbo_stylesheet_test/four'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_stylesheet_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo stylesheet test four'
+    library: 'four'
+    linkToRoute: 'refreshless_turbo_stylesheet_test.five'
+
+refreshless_turbo_stylesheet_test.five:
+  path: '/refreshless_turbo_stylesheet_test/five'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: 'Drupal\refreshless_turbo_stylesheet_test\Controller\RouteController::route'
+    _title: 'RefreshLess Turbo stylesheet test five'
+    library: 'five'
+    linkToRoute: 'refreshless_turbo_stylesheet_test.four'

@@ -1,0 +1,13 @@
+/**
+ * Prevents Gin navigation sidebar transition occurring during a Turbo visit.
+ *
+ * This mostly fixes the issue of the page wrapper doing a quick and jarring
+ * side to side movement on the edge where the sidebar is located when Turbo
+ * swaps out the <body> contents. While this works nearly 100% of the time, it
+ * still occasionally allows a transition to sneak in so we may have to create
+ * a JavaScript behaviour to apply a class to the <html> element and only remove
+ * it when the <body> has settled.
+ */
+:root[aria-busy] .admin-toolbar ~ .dialog-off-canvas-main-canvas {
+  transition-duration: 0s !important;
+}

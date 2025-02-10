@@ -1,0 +1,180 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Artisan Styleguide SDC Model
+description: Model component with many examples to use as reference.
+# When any additional library dependency is required, it should be added here:
+libraryOverrides:
+  dependencies:
+    - core/drupal
+# NOTE: Be careful of using prop or slot properly. Use these as references
+# including examples key when multiple.
+# Props: definition list of any "simple" values to use in component like string:
+props:
+  type: object
+  properties:
+    # Key to identify prop & use in twig.
+    prop_string:
+      # Prop descriptive short title.
+      title: Basic string
+      # Prop description.
+      description: The description for basic string prop.
+      # Examples key that is mandatory to generate preview correctly.
+      examples:
+        - Hello, basic string example value, it works!
+      # Type acoording to requirement & schema definitions.
+      type: string
+      # Default value to apply when any provided when using.
+      default: Default string, this rocks!
+    prop_uri:
+      title: Basic URI
+      description: The description for basic URI prop.
+      type: string
+      format: uri
+      examples:
+        - https://www.drupal.org/project/vlsuite
+    prop_regex:
+      title: Basic REGEX
+      description: The description for basic REGEX prop.
+      type: string
+      format: regex
+      examples:
+        - ^potato$
+    prop_boolean:
+      title: Basic Boolean
+      description: The description for basic boolean prop.
+      type: boolean
+      examples:
+        - true
+    prop_integer:
+      title: Basic Integer
+      description: The description for basic integer prop.
+      type: integer
+      minimum: 0
+      maximum: 1000
+      examples:
+        - 25
+    prop_number:
+      title: Basic Number
+      description: The description for basic Number prop.
+      type: number
+      minimum: 0
+      maximum: 1000
+      examples:
+        - 52
+    prop_object:
+      title: Basic Object
+      description: The description for basic Object prop.
+      type: object
+      examples:
+        - { name: Potato }
+    prop_array_of_strings:
+      title: Basic array of strings
+      description: The description for basic Array of strings prop.
+      type: array
+      items:
+        type: string
+      minItems: 1
+      uniqueItems: true
+      examples:
+        -
+          - One
+          - Two
+          - Three
+    prop_array_of_objects:
+      title: Basic array of objects
+      description: The description for basic Array of objects prop.
+      type: array
+      items:
+        type: object
+      minItems: 1
+      uniqueItems: true
+      examples:
+        -
+          - { name: Tetris, surname: BestGameEver }
+          - { name: Bitcoin, surname: Best4FreedomEver }
+          - { name: Potato, surname: BestDevPlaceholderEver }
+    prop_enum_of_strings:
+      type: string
+      title: Basic enum of strings
+      enum:
+        - One
+        - Two
+        - Three
+      examples:
+        - Two
+    prop_enum_of_numbers:
+      type: number
+      title: Basic enum of numbers
+      enum:
+        - 3
+        - 5
+        - 8
+      examples:
+        - 8
+    prop_font_icon:
+      title: Basic Font Icon
+      description: The description for basic font icon prop.
+      type: string
+      examples:
+        - search
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: The description for attributes prop.
+      examples:
+        -
+          class: ['example-class-attribute']
+          data-example: ['example-value']
+    complementary_attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Complementary attributes
+      description: The description for complementary attributes prop.
+      examples:
+        -
+          class: ['example-class-attribute']
+          data-example: ['example-value']
+# Slots: definition list of any "complex" values to use in component:
+slots:
+  slot_renderable_string_twig:
+    title: Complex renderable string twig
+    description: The description for Complex renderable string twig slot.
+    examples:
+      - <span>Complex renderable string twig {{ url('<front>') }}</span>
+      - >
+        {% embed "artisan:local-tasks" with {
+          primary_tabs: {
+            '#markup':
+              '<li class="nav-item"><a href="#" class="nav-link">Tab 1</a></li>
+              <li class="nav-item"><a href="#" class="nav-link">Tab 2</a></li>'
+          }
+        } only %}
+        {% endembed %}
+  slot_string_html:
+    title: Complex string html
+    description: The description for Complex string html slot.
+    examples:
+      - <h5>Complex string html example</h5>
+  slot_renderable_array:
+    title: Complex rendrable array
+    description: The description for Complex rendrable array slot.
+    examples:
+      -
+        '#theme': 'image'
+        '#uri': 'modules/contrib/artisan_styleguide/components/artisan-styleguide-sdc-model/artisan-styleguide-sdc-model-placeholder.jpg'
+        '#width': '1920'
+        '#height': '1080'
+        '#alt': 'Alternative image text'
+      -
+        '#theme': 'image_style'
+        '#style_name': 'thumbnail'
+        '#uri': 'public://artisan-styleguide-sdc-model/artisan-styleguide-sdc-model-placeholder.jpg'
+        '#width': '100'
+        '#height': '100'
+        '#alt': 'Alternative image text'
+      -
+        '#theme': 'responsive_image'
+        '#responsive_image_style_id': 'vlsuite_original_optimized'
+        '#uri': 'public://artisan-styleguide-sdc-model/artisan-styleguide-sdc-model-placeholder.jpg'
+        '#attributes':
+          'alt': 'Alternative text'
+      -
+        '#markup': <h5>Complex rendrable array example</h5>

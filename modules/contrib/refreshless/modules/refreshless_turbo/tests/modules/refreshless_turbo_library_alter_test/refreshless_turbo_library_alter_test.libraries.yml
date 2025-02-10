@@ -1,0 +1,8 @@
+alter_basic:
+  js:
+    js/alter_basic.js: {}
+
+alter_already_header:
+  js:
+    js/alter_already_header.js: {}
+  header: true

@@ -1,0 +1,16 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+name: RefreshLess progress bar
+description: Displays progress for page loads and form submissions.
+props:
+  type: object
+  additionalProperties: false
+  properties: {}
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/jquery
+  js:
+    progress-bar.js:
+      attributes: { defer: true }
+      group:      refreshless
+      preprocess: false
