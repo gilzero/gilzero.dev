@@ -1,0 +1,5 @@
+name: 'Gilzero Helper'
+type: module
+description: 'Helper module for gilzero.dev'
+package: Custom
+core_version_requirement: ^10 || ^11
